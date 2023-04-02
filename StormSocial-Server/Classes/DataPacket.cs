@@ -10,7 +10,7 @@ namespace StormSocial_Server.Classes
 {
     internal class DataPacket // Class for structure of 
     {
-        struct DataPacketStruct
+        public struct DataPacketStruct
         {
             public IPAddress[] sourceAddress; // Source address 
             public int sequenceNumber; // Sequence number
@@ -42,7 +42,7 @@ namespace StormSocial_Server.Classes
             }
         }
 
-        internal class PacketManipulation
+        public class PacketManipulation
         {
             char[] buffer = new char[Marshal.SizeOf(typeof(DataPacket))];
 
@@ -80,6 +80,7 @@ namespace StormSocial_Server.Classes
                 return buffer;
             }
 
+            // Deserialize a data packet 
             static DataPacketStruct DeserializeDataPacketStruct(byte[] data)
             {
                 IntPtr ptr = IntPtr.Zero;
@@ -103,6 +104,48 @@ namespace StormSocial_Server.Classes
                         Marshal.FreeHGlobal(ptr); //  ensures that the memory block is always freed
                     }
                 }
+            }
+
+            // Convert images to string (for packet data)
+            public static string EncodeImageToString(byte[] imageData)
+            {
+                // Convert byte array to Base64 string
+                string base64String = Convert.ToBase64String(imageData);
+                return base64String;
+            }
+
+            // Convert images from string back to byte array  
+            public static void DecodeAndWriteImageToFile(string base64StringImage, string outputPath)
+            {
+                // Convert Base64 string to byte array
+                byte[] imageData = Convert.FromBase64String(base64StringImage);
+
+                // Write the image byte array to a file
+                File.WriteAllBytes(outputPath, imageData);
+            }
+
+            // Convert 
+            public static void ProcessDataPacket(DataPacketStruct receivedPacket)
+            {
+                if (receivedPacket.dataType == "image") // Decode and write package image to local path 
+                {
+                    string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
+                    string encodedPacketImage = receivedPacket.data; // Get encoded image from packet 
+
+                    DecodeAndWriteImageToFile(encodedPacketImage, imagePath); // Decode received image and write to file
+                }
+                if (receivedPacket.dataType == "text/plain")
+                {
+                    // Process text...
+                }
+            }
+
+            // Function to generate a unique image path (based on date/time)
+            public static string GetUniqueImagePath()
+            {
+                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
+                string imagePath = Path.Combine(Environment.CurrentDirectory, fileName);
+                return imagePath;
             }
 
         }
