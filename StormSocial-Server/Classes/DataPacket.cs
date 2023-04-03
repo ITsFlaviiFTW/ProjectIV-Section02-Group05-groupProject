@@ -5,106 +5,86 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
+using System.Security.Cryptography;
+using Force.Crc32;
+using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json;
 
 namespace StormSocial_Server.Classes
 {
-    internal class DataPacket // Class for structure of 
+    public class DataPacket // Class for structure of 
     {
-        public struct DataPacketStruct
+        public class DataPacketStruct
         {
-            public IPAddress[] sourceAddress; // Source address 
+            public string sourceAddress; // Source address 
             public int sequenceNumber; // Sequence number
-            public DateTime timeStamp; // Timestamp
+            public string timeStamp; // Timestamp
             public string dataType; // Type of data
-            public string data; // Actual packet data
+            public string packetData; // Actual packet data
             public uint checksum; // Checksum
 
             // Constructor to initialize the packet 
             public DataPacketStruct()
             {
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName()); // Get source address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
                 this.sequenceNumber = 0;
-                this.timeStamp = DateTime.Now;
+                this.timeStamp = DateTime.Now.ToString();
                 this.dataType = "text/plain";
-                this.data = "defaultString";
-                this.checksum = 123;
+                this.packetData = "defaultString";
+                this.checksum = CalculateChecksum();  
             }
 
             // Constructor to initialize the packet with parameters
-            public DataPacketStruct(IPAddress[] sourceAddress, int sequenceNumber, DateTime timeStamp, string dataType, string data, uint checksum)
+            public DataPacketStruct(int sequenceNumber, string dataType, string data, uint checksum)
             {
-                this.sourceAddress = sourceAddress;
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
                 this.sequenceNumber = sequenceNumber;
-                this.timeStamp = timeStamp;
+                this.timeStamp = DateTime.Now.ToString();
                 this.dataType = dataType;
-                this.data = data;
+                this.packetData = data;
                 this.checksum = checksum;
+            }
+
+            // Calculate the packet checksum using the CRC32 algorithm
+            private uint CalculateChecksum()
+            {
+                using (var crc32 = new Crc32Algorithm())
+                {
+                    var sourceData = $"{sourceAddress},{sequenceNumber},{timeStamp},{dataType},{packetData}";
+                    byte[] data = Encoding.ASCII.GetBytes(sourceData);
+                    byte[] hash = crc32.ComputeHash(data);
+                    return BitConverter.ToUInt32(hash, 0);
+                }
             }
         }
 
         public class PacketManipulation
         {
-            char[] buffer = new char[Marshal.SizeOf(typeof(DataPacket))];
-
             // Function to log the data packet information to a text file
-            void LogDataPacketInfo(DataPacketStruct packet, string filename)
+            public void LogDataPacketInfo(DataPacketStruct packet, string filename)
             {
                 using (StreamWriter outputFile = new StreamWriter(filename, true))
                 {
                     // Write packet info in a structured format
                     outputFile.WriteLine("Source address: " + packet.sourceAddress);
                     outputFile.WriteLine("Sequence number: " + packet.sequenceNumber);
-                    outputFile.WriteLine("Timestamp: " + packet.timeStamp.ToString("yyyy-MM-dd HH:mm:ss"));
+                    outputFile.WriteLine("Timestamp: " + packet.timeStamp);
                     outputFile.WriteLine("Data type: " + packet.dataType);
-                    outputFile.WriteLine("Data: " + packet.data);
+                    outputFile.WriteLine("Data: " + packet.packetData);
                 }
             }
 
-            // Serialize a data packet
-            static byte[] SerializeDataPacketStruct(DataPacketStruct dataPacket)
+            public static string SerializeDataPacketStruct(DataPacketStruct packet)
             {
-                int size = Marshal.SizeOf(dataPacket); // get the size of a data packet
-                byte[] buffer = new byte[size]; // create a buffer for the serialized data 
-                IntPtr ptr = Marshal.AllocHGlobal(size); // ptr for the structure data 
-
-                try 
-                {
-                    Marshal.StructureToPtr(dataPacket, ptr, false); // copy the packet contents to block
-                    Marshal.Copy(ptr, buffer, 0, size); // copy packet contents (^block) to buffer
-                }
-                finally
-                {
-                    Marshal.FreeHGlobal(ptr); // free the allocated block
-                }
-
-                return buffer;
+                return JsonConvert.SerializeObject(packet);
             }
 
-            // Deserialize a data packet 
-            static DataPacketStruct DeserializeDataPacketStruct(byte[] data)
+            public static DataPacketStruct DeserializeDataPacketStruct(string json)
             {
-                IntPtr ptr = IntPtr.Zero;
-
-                try
-                {
-                    int size = Marshal.SizeOf<DataPacketStruct>(); // get the size of a data packet
-                    ptr = Marshal.AllocHGlobal(size); // ptr for the structure data 
-
-                    Marshal.Copy(data, 0, ptr, size); // copies the contents of the byte array
-
-                    // Convert memory block back to packet struct
-                    DataPacketStruct packet = Marshal.PtrToStructure<DataPacketStruct>(ptr);
-
-                    return packet;
-                }
-                finally
-                {
-                    if (ptr != IntPtr.Zero)
-                    {
-                        Marshal.FreeHGlobal(ptr); //  ensures that the memory block is always freed
-                    }
-                }
+                return JsonConvert.DeserializeObject<DataPacketStruct>(json);
             }
+
 
             // Convert images to string (for packet data)
             public static string EncodeImageToString(byte[] imageData)
@@ -130,7 +110,7 @@ namespace StormSocial_Server.Classes
                 if (receivedPacket.dataType == "image") // Decode and write package image to local path 
                 {
                     string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
-                    string encodedPacketImage = receivedPacket.data; // Get encoded image from packet 
+                    string encodedPacketImage = receivedPacket.packetData; // Get encoded image from packet 
 
                     DecodeAndWriteImageToFile(encodedPacketImage, imagePath); // Decode received image and write to file
                 }
