@@ -65,6 +65,26 @@ namespace StormSocial_Server.Classes
             return verification;
         }
 
+        public bool userLogIn(string email, string password)
+        {
+            string fileName = "profiles.txt";
+
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] seperate = line.Split(';');
+                    if (seperate[0] == email && seperate[1] == password)
+                    {
+                        return true;
+                    }
+                }
+
+            }
+            return false;
+        }
+
         //this will be called from the sign up form and will pass info from the textboxes on the form
         public bool signUp(string firstName, string lastName, string email, string password, string passConfirm)
         {
