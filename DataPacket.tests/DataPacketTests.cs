@@ -7,6 +7,7 @@ using System.Runtime.Intrinsics.Arm;
 using static StormSocial_Server.Classes.DataPacket;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace StormSocial_Server.Tests
 {
@@ -171,8 +172,8 @@ namespace StormSocial_Server.Tests
             };
 
             // Create two sockets
-            var serverSocket = new DataPacket.DataPacketTcpSocket("localhost", 1234);
-            var clientSocket = new DataPacket.DataPacketTcpSocket("localhost", 1234);
+            var serverSocket = new DataPacket.DataPacketTcpSocket("localhost", 8080);
+            var clientSocket = new DataPacket.DataPacketTcpSocket("localhost", 8080);
 
             // Act
 
@@ -193,8 +194,8 @@ namespace StormSocial_Server.Tests
         public void T009_TestPacketReceiving()
         {
             // Arrange
-            string ipAddress = "127.0.0.1"; // Replace with actual IP address of the server
-            int port = 1234; // Replace with actual port number of the server
+            string ipAddress = "localhost"; // IP address of the server
+            int port = 8080; // Port number of the server
             DataPacketTcpSocket socket = new DataPacketTcpSocket(ipAddress, port);
 
             // Create a test packet
@@ -225,6 +226,12 @@ namespace StormSocial_Server.Tests
             server.Stop();
             client.Close();
             stream.Close();
+        }
+
+        [TestMethod]
+        public void T010_TestConnection()
+        {
+
         }
     }
 }
