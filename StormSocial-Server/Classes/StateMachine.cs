@@ -6,174 +6,159 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Collections.Generic;
+using System.Net.Sockets;
+
 namespace StormSocial_Server.Classes
 {
     internal class StateMachine
     {
+        // Use a property to store the current state
+        public ServerState CurrentState { get; private set; }
+        private Socket listener;
+
+        // Store the client connections in a list
+        private readonly List<ClientConnection> clientConnections = new List<ClientConnection>();
+
+        public StateMachine()
+        {
+            CurrentState = ServerState.OffState;
+        }
+
+        public void TransitionTo(ServerState nextState)
+        {
+            // Perform any exit actions for the current state
+            switch (CurrentState)
+            {
+                case ServerState.OnState:
+                    StopListeningForConnections();
+                    break;
+                case ServerState.ChatState:
+                    DisconnectAllClients();
+                    break;
+            }
+
+            // Perform any entry actions for the next state
+            switch (nextState)
+            {
+                case ServerState.OnState:
+                    StartListeningForConnections();
+                    break;
+                case ServerState.ChatState:
+                    StartChatting();
+                    break;
+            }
+
+            // Update the current state
+            CurrentState = nextState;
+        }
+
+        private void StartListeningForConnections()
+        {
+            // Set up the listening socket
+            listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            listener.Bind(new IPEndPoint(IPAddress.Any, 8000));
+            listener.Listen(10);
+
+            // Start accepting incoming connections asynchronously
+            listener.BeginAccept(OnClientConnected, listener);
+        }
+
+        private void OnClientConnected(IAsyncResult result)
+        {
+            // Accept the new connection
+            listener = (Socket)result.AsyncState;
+            var clientSocket = listener.EndAccept(result);
+
+            // Create a new client connection object and add it to the list
+            var clientConnection = new ClientConnection(clientSocket, this);
+            clientConnections.Add(clientConnection);
+
+            // Start receiving data from the client asynchronously
+            clientSocket.BeginReceive(clientConnection.Buffer, 0, clientConnection.Buffer.Length, SocketFlags.None, clientConnection.OnReceive, null);
+
+            // Continue accepting incoming connections
+            listener.BeginAccept(OnClientConnected, listener);
+        }
+
+        private void StartChatting()
+        {
+            // Nothing to do here, since we start accepting connections as soon as we enter the ChatState
+        }
+
+        private void StopListeningForConnections()
+        {
+            // Close the listening socket
+            listener.Close();
+        }
+
+        private void DisconnectAllClients()
+        {
+            // Disconnect all clients
+            foreach (var clientConnection in clientConnections)
+            {
+                clientConnection.Socket.Close();
+            }
+            clientConnections.Clear();
+        }
+
         public enum ServerState
         {
             OffState,
             OnState,
-            WaitForConnectionState,
-            WaitForPostState,
             ChatState
         }
+
         public class ClientConnection
         {
-            private Socket socket;
-            private byte[] buffer = new byte[1024];
+            // Store the socket and buffer in fields
+            public readonly Socket Socket;
+            public readonly byte[] Buffer = new byte[1024];
 
-            public void Connect(string ipAddress, int port)
+            public ClientConnection(Socket clientSocket, StateMachine stateMachine)
             {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
-                socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, OnReceive, null);
+                Socket = clientSocket;
+                StateMachine = stateMachine;
             }
+
+            public StateMachine StateMachine { get; }
 
             public void Send(string message)
             {
                 byte[] data = Encoding.ASCII.GetBytes(message);
-                socket.Send(data);
+                Socket.Send(data);
             }
 
-            private void OnReceive(IAsyncResult result)
+            public void OnReceive(IAsyncResult result)
             {
-                int bytesRead = socket.EndReceive(result);
+                int bytesRead = Socket.EndReceive(result);
                 if (bytesRead > 0)
                 {
-                    string message = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                    // TODO: handle incoming message
-                    
+                    string message = Encoding.ASCII.GetString(Buffer, 0, bytesRead);
+                    // Broadcast the message to all clients except the sender
+                    foreach (var clientConnection in StateMachine.clientConnections)
+                    {
+                        if (clientConnection != this)
+                        {
+                            clientConnection.Send(message);
+                        }
+                    }
+                    // Start receiving data from the client again
+                    Socket.BeginReceive(Buffer, 0, Buffer.Length, SocketFlags.None, OnReceive, null);
                 }
-                socket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, OnReceive, null);
-            }
-        }
-
-        public class ServerStateMachine
-        {    
-            private ServerState currentState;
-            private Socket listener;
-
-            // Define any necessary module-level variables here
-            private List<ClientConnection> clientConnections;
-
-            public ServerStateMachine()
-            {
-                currentState = ServerState.OffState;
-                // Initialize any module-level variables here
-                clientConnections = new List<ClientConnection>();
-            }
-            public void StartListeningForConnections()
-            {
-                // Set up the listening socket
-                listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                listener.Bind(new IPEndPoint(IPAddress.Any, 1234));
-                listener.Listen(10);
-
-                Console.WriteLine("Waiting for connections...");
-
-                // Accept connections in a loop
-                while (true)
+                else
                 {
-                    // Accept a connection
-                    Socket clientSocket = listener.Accept();
-
-                    // Create a new ClientConnection object to handle the connection
-                    ClientConnection clientConnection = new ClientConnection(clientSocket, this);
-
-                    // Add the new client to the list of connected clients
-                    connectedClients.Add(clientConnection);
-
-                    Console.WriteLine("Client connected: " + clientSocket.RemoteEndPoint.ToString());
+                    // If no data was received, disconnect the client
+                    Disconnect();
                 }
             }
 
-            public void TransitionTo(ServerState nextState)
+            private void Disconnect()
             {
-                switch (currentState)
-                {
-                    case ServerState.OffState:
-                        if (nextState == ServerState.OnState)
-                        {
-                            // Perform OnState entry actions here
-                            StartListeningForConnections();
-                            currentState = nextState;
-                        }
-                        break;
-
-                    case ServerState.OnState:
-                        if (nextState == ServerState.WaitForConnectionState)
-                        {
-                            // Perform WaitForConnectionState entry actions here
-                            Console.WriteLine("Waiting for client connections...");
-                            currentState = nextState;
-                        }
-                        else if (nextState == ServerState.OffState)
-                        {
-                            // Perform OffState entry actions here
-                            listener.Close();
-                            Console.WriteLine("Server is now offline.");
-                            currentState = nextState;
-                        }
-                        break;
-
-                    case ServerState.WaitForConnectionState:
-                        if (nextState == ServerState.WaitForPostState)
-                        {
-                            // Perform WaitForPostState entry actions here
-                            Console.WriteLine("All clients connected. Waiting for posts...");
-                            AcceptNextConnection();
-                            currentState = nextState;
-                        }
-                        else if (nextState == ServerState.OffState)
-                        {
-                            // Perform OffState entry actions here
-                            listener.Close();
-                            Console.WriteLine("Server is now offline.");
-                            currentState = nextState;
-                        }
-                        break;
-
-                    case ServerState.WaitForPostState:
-                        if (nextState == ServerState.WaitForConnectionState)
-                        {
-                            // Perform WaitForConnectionState entry actions here
-                            StartWaitingForPosts();
-                            currentState = nextState;
-                        }
-                        else if (nextState == ServerState.OffState)
-                        {
-                            // Perform OffState entry actions here
-                            currentState = nextState;
-                        }
-                        else if (nextState == ServerState.ChatState)
-                        {
-                            // Perform ChatState entry actions here
-                            EnterChatState();
-                            currentState = nextState;
-                        }
-                        break;
-
-                    case ServerState.ChatState:
-                        if (nextState == ServerState.WaitForPostState)
-                        {
-                            // Perform WaitForPostState entry actions here
-                            ExitChatState();
-                            currentState = nextState;
-                        }
-                        else if (nextState == ServerState.OffState)
-                        {
-                            // Perform OffState entry actions here
-                            ExitChatState();
-                            currentState = nextState;
-                        }
-                        break;
-
-                    default:
-                        // Handle invalid state transition
-                        break;
-                }
+                Socket.Close();
+                StateMachine.clientConnections.Remove(this);
             }
         }
     }
 }
+
