@@ -1,8 +1,12 @@
 using Force.Crc32;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
+using static StormSocial_Server.Classes.DataPacket;
+using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace StormSocial_Server.Tests
 {
@@ -105,6 +109,84 @@ namespace StormSocial_Server.Tests
 
             // Clean up
             File.Delete(filename);
+        }
+
+        [TestMethod]
+        public void T006_ImageDecode_CheckImageIsSaved()
+        {
+            // Arrange
+            var packet = new DataPacket.DataPacketStruct() // Create a new packet (with mock image)
+            {
+                dataType = "image",
+                packetData = "encodedImageData"
+            };
+            var imagePath = DataPacket.PacketManipulation.GetUniqueImagePath();
+
+            // Act
+
+            // Decode and write image to file
+            DataPacket.PacketManipulation.DecodeAndWriteImageToFile(packet.packetData, imagePath);
+
+            // Assert
+            Assert.IsTrue(File.Exists(imagePath)); // Check if image has been saved 
+        }
+
+        [TestMethod]
+        public void T007_TestPacketProcessing()
+        {
+            // Arrange
+            var packet = new DataPacket.DataPacketStruct()
+            {
+                dataType = "text/plain",
+                packetData = "test data"
+            };
+
+            // Act
+            try
+            {
+                DataPacket.PacketManipulation.ProcessDataPacket(packet);
+            }
+            catch (AssertFailedException ex)
+            {
+                Assert.Fail("Assertion failed: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail("Unexpected exception: " + ex.Message);
+            }
+
+            // Assert
+            // No exception thrown
+        }
+
+        [TestMethod]
+        public void T008_TestPacketSending() // Create a new data packet
+        {
+            // Arrange
+            var packet = new DataPacket.DataPacketStruct()
+            {
+                sequenceNumber = 1,
+                dataType = "image",
+                packetData = "encodedImageData"
+            };
+
+            // Create two sockets
+            var serverSocket = new DataPacket.DataPacketTcpSocket("localhost", 1234);
+            var clientSocket = new DataPacket.DataPacketTcpSocket("localhost", 1234);
+
+            // Act
+
+            // Send the data packet from the server socket to the client socket
+            var serverResult = serverSocket.SendDataPacket(packet);
+            var receivedPacket = clientSocket.ReceiveDataPacket();
+
+            // Assert
+
+            // Ensure received data packet matches the original data packet
+            Assert.IsTrue(serverResult);
+            Assert.AreEqual(packet.sequenceNumber, receivedPacket.sequenceNumber);
+            Assert.AreEqual(packet.dataType, receivedPacket.dataType);
+            Assert.AreEqual(packet.packetData, receivedPacket.packetData);
         }
     }
 }
