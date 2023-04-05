@@ -23,19 +23,23 @@ namespace StormSocial_Server.Classes
         {
             string fileName = "profiles.txt";
 
-            using (StreamReader reader = new StreamReader(fileName))
+            if(File.Exists(fileName)) //check to see if file exists
             {
-                string line;
-                while((line = reader.ReadLine()) != null)
+                using (StreamReader reader = new StreamReader(fileName))
                 {
-                    string[] seperate = line.Split(';');
-                    if (seperate[0] == email)
+                    string line;
+                    while ((line = reader.ReadLine()) != null) // read lines in untill end of file is reached
                     {
-                        return true;
+                        string[] seperate = line.Split(';'); //splits the line into array on the ';'
+                        if (seperate[0] == email) //email will be at index 0 cuz it was the first item in the line
+                        {
+                            return true;
+                        }
                     }
-                }
 
+                }
             }
+
             return false;
         }
 
@@ -67,21 +71,26 @@ namespace StormSocial_Server.Classes
 
         public bool userLogIn(string email, string password)
         {
+            //See checkForExistingEmailInFile() function for documentation
             string fileName = "profiles.txt";
 
-            using (StreamReader reader = new StreamReader(fileName))
+            if (File.Exists(fileName)) 
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                using (StreamReader reader = new StreamReader(fileName))
                 {
-                    string[] seperate = line.Split(';');
-                    if (seperate[0] == email && seperate[1] == password)
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        return true;
+                        string[] seperate = line.Split(';');
+                        if (seperate[0] == email && seperate[1] == password)
+                        {
+                            return true;
+                        }
                     }
-                }
 
+                }
             }
+
             return false;
         }
 
