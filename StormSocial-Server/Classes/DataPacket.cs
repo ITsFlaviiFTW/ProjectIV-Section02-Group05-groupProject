@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using Force.Crc32;
 using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
+using System.Net.Sockets;
 
 namespace StormSocial_Server.Classes
 {
@@ -47,7 +48,7 @@ namespace StormSocial_Server.Classes
             }
 
             // Calculate the packet checksum using the CRC32 algorithm
-            private uint CalculateChecksum()
+            public uint CalculateChecksum()
             {
                 using (var crc32 = new Crc32Algorithm())
                 {
@@ -127,7 +128,85 @@ namespace StormSocial_Server.Classes
                 string imagePath = Path.Combine(Environment.CurrentDirectory, fileName);
                 return imagePath;
             }
+        }
 
+        // Class contains networking-related packet functions 
+        public class DataPacketTcpSocket
+        {
+            private readonly int port; // Port to connect to 
+            private readonly string ipAddress; // IP address of the server 
+
+            public DataPacketTcpSocket(string ipAddress, int port) // Constructor 
+            {
+                this.ipAddress = ipAddress;
+                this.port = port;
+            }
+
+            // Method to send a data packet 
+            public bool SendDataPacket(DataPacket.DataPacketStruct packet)
+            {
+                try
+                {
+                    // Connect to the server using TCP
+                    TcpClient client = new TcpClient(ipAddress, port);
+                    NetworkStream stream = client.GetStream();
+
+                    // Serialize packet to json string
+                    string jsonString = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+
+                    // Convert json string to byte array
+                    byte[] data = Encoding.ASCII.GetBytes(jsonString);
+
+                    // Send packet to server
+                    stream.Write(data, 0, data.Length);
+
+                    // Close connections
+                    stream.Close();
+                    client.Close();
+
+                    return true; // Return true if successful
+                }
+                catch (SocketException)
+                {
+                    return false;  // Return false if failed to send data packet
+                }
+            }
+
+            public DataPacket.DataPacketStruct ReceiveDataPacket()
+            {
+                try
+                {
+                    // Start listening for incoming connections
+                    TcpListener listener = new TcpListener(IPAddress.Any, port);
+                    listener.Start();
+
+                    // Accept incoming connection
+                    TcpClient client = listener.AcceptTcpClient();
+                    NetworkStream stream = client.GetStream();
+
+                    // Read data from the stream
+                    byte[] data = new byte[client.ReceiveBufferSize];
+                    int bytesRead = stream.Read(data, 0, client.ReceiveBufferSize);
+
+                    // Convert received byte array to json string
+                    string jsonString = Encoding.ASCII.GetString(data, 0, bytesRead);
+
+                    // Deserialize json string to packet object
+                    DataPacket.DataPacketStruct packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(jsonString);
+
+                    // Close connections
+                    stream.Close();
+                    client.Close();
+                    listener.Stop();
+
+                    // Return the received data packet
+                    return packet;
+                }
+                catch (SocketException)
+                {
+                    return null; // Return null if failed to receive data packet
+                }
+            }
         }
     }
 }
