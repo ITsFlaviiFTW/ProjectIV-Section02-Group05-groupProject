@@ -6,6 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StormSocial-Server", "StormSocial-Server\StormSocial-Server.csproj", "{463CADCB-2FD0-49BE-BE78-1EBDA81A0626}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StormSocial-Client", "StormSocial-Client\StormSocial-Client.csproj", "{DB4A2F7B-26EB-4BE1-AF43-684D5E79148E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{463CADCB-2FD0-49BE-BE78-1EBDA81A0626} = {463CADCB-2FD0-49BE-BE78-1EBDA81A0626}
+	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StormSocial-Client", "StormSocial-Client\StormSocial-Client.csproj", "{DB4A2F7B-26EB-4BE1-AF43-684D5E79148E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nicos-Tests", "Nicos-Tests\Nicos-Tests.csproj", "{920D5F4A-D0BD-4A4C-9682-40FEF855DD75}"
 EndProject
