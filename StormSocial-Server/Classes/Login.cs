@@ -16,10 +16,63 @@ namespace StormSocial_Server.Classes
 {
     internal class Login
     {
+        private string email;
+        private string password;
+
+        private void addToFile()
+        {
+            string fileName = "loginCredits.txt";
+
+            if(File.Exists(fileName))
+            {
+                using(StreamWriter fout = new StreamWriter(fileName, true)) //open file to append
+                {
+                    fout.WriteLine(this.getEmail() + ";" + this.getPassword()); //add credentials to the file
+                }
+            }
+            else
+            {
+                using (FileStream stream = File.Create(fileName)); // if file does not exist create a new one
+                addToFile(); //recall function to add the credentials to file
+            }
+        }
+        private bool checkForExistingEmailInFile(string email)
+        {
+
+        }
+
+        public Login()
+        {
+            this.email = string.Empty;
+            this.password = string.Empty;
+        }
+        public Login(string email, string password)
+        {
+            this.email = email;
+            this.password = password;
+        }
+
+        public string getEmail()
+        {
+            return this.email;
+        }
+        public string getPassword()
+        {
+            return this.password;
+        }
+        public void setEmail(string email)
+        {
+            this.email = email;
+        }
+        public void setPassword(string password)
+        {
+            this.password = password;
+        }
 
 
         public void sendEmail()
         {
+            //This just all email API shit
             const string API_KEY = "4B765D18F45A2A65A6448E3BDF79721C97201EA62A07DD3134E7615A3D453FB02E995AF31D2CD703B48D4DE10FC6B7C2";
 
             Configuration config = new Configuration();
@@ -28,8 +81,7 @@ namespace StormSocial_Server.Classes
             var apiInstance = new EmailsApi(config);
 
             var to = new List<string>();
-            to.Add("officialprinteduniverse@gmail.com");
-            to.Add("timmerman.ny64@gmail.com");
+            to.Add(this.getEmail());
             var recipients = new TransactionalRecipient(to: to);
             EmailTransactionalMessageData emailData = new EmailTransactionalMessageData(recipients: recipients);
             emailData.Content = new EmailContent();
@@ -62,9 +114,26 @@ namespace StormSocial_Server.Classes
         }
         public int randomCode()
         {
+            //generate random 6 digit code
             Random rand = new Random();
             int verification = rand.Next(100000, 999999);
             return verification;
         }
+        public bool signUp(string firstName, string lastName, string email, string password, string passConfirm)
+        {
+            bool completed = false;
+            if(password == passConfirm)
+            {
+
+            }
+            else
+            {
+                return false; // if passwords do not match do not create account
+            }
+            
+
+            return completed;
+        }
+        
     }
 }
