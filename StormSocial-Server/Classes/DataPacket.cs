@@ -117,7 +117,10 @@ namespace StormSocial_Server.Classes
                 }
                 if (receivedPacket.dataType == "text/plain")
                 {
-                    // Process text...
+                    // Process text
+                    string textPath = GetUniqueImagePath();
+                    PacketManipulation textLogger = new PacketManipulation();
+                    textLogger.LogDataPacketInfo(receivedPacket, textPath);
                 }
             }
 

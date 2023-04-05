@@ -132,7 +132,7 @@ namespace StormSocial_Server.Tests
         }
 
         [TestMethod]
-        public void T007_TestPacketProcessing()
+        public void T007_ProcessPacket_VerifyNoExceptions()
         {
             // Arrange
             var packet = new DataPacket.DataPacketStruct()
@@ -163,7 +163,7 @@ namespace StormSocial_Server.Tests
         public void T008_TestPacketSending() // Create a new data packet
         {
             // Arrange
-            var packet = new DataPacket.DataPacketStruct()
+            var packet = new DataPacket.DataPacketStruct() // Test packet
             {
                 sequenceNumber = 1,
                 dataType = "image",
@@ -187,6 +187,44 @@ namespace StormSocial_Server.Tests
             Assert.AreEqual(packet.sequenceNumber, receivedPacket.sequenceNumber);
             Assert.AreEqual(packet.dataType, receivedPacket.dataType);
             Assert.AreEqual(packet.packetData, receivedPacket.packetData);
+        }
+
+        [TestMethod]
+        public void T009_TestPacketReceiving()
+        {
+            // Arrange
+            string ipAddress = "127.0.0.1"; // Replace with actual IP address of the server
+            int port = 1234; // Replace with actual port number of the server
+            DataPacketTcpSocket socket = new DataPacketTcpSocket(ipAddress, port);
+
+            // Create a test packet
+            DataPacket.DataPacketStruct testPacket = new DataPacket.DataPacketStruct();
+            string jsonString = DataPacket.PacketManipulation.SerializeDataPacketStruct(testPacket);
+            byte[] data = Encoding.ASCII.GetBytes(jsonString);
+
+            // Start a server to send the test packet
+            TcpListener server = TcpListener.Create(port);
+            server.Start();
+            TcpClient client = new TcpClient();
+            client.Connect(ipAddress, port);
+            NetworkStream stream = client.GetStream();
+            stream.Write(data, 0, data.Length);
+
+            // Act
+            DataPacket.DataPacketStruct receivedPacket = socket.ReceiveDataPacket();
+
+            // Assert
+            Assert.AreEqual(testPacket.sourceAddress, receivedPacket.sourceAddress);
+            Assert.AreEqual(testPacket.sequenceNumber, receivedPacket.sequenceNumber);
+            Assert.AreEqual(testPacket.timeStamp, receivedPacket.timeStamp);
+            Assert.AreEqual(testPacket.dataType, receivedPacket.dataType);
+            Assert.AreEqual(testPacket.packetData, receivedPacket.packetData);
+            Assert.AreEqual(testPacket.checksum, receivedPacket.checksum);
+
+            // Clean up
+            server.Stop();
+            client.Close();
+            stream.Close();
         }
     }
 }
