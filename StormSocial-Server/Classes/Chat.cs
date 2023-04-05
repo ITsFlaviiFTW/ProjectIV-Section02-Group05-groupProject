@@ -23,7 +23,7 @@ namespace StormSocial_Server.Classes
 
         public string createStringToWriteToFile()
         {
-            return string.Concat(this.getSender(), ";", this.getRecipient());
+            return string.Concat(this.getSender(), ";", this.getRecipient(), ";", this.getMessage());
         }
     }
     internal class Chat

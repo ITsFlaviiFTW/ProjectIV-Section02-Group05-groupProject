@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormSocial-Server", "StormSocial-Server\StormSocial-Server.csproj", "{463CADCB-2FD0-49BE-BE78-1EBDA81A0626}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StormSocial-Server", "StormSocial-Server\StormSocial-Server.csproj", "{463CADCB-2FD0-49BE-BE78-1EBDA81A0626}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormSocial-Client", "StormSocial-Client\StormSocial-Client.csproj", "{DB4A2F7B-26EB-4BE1-AF43-684D5E79148E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StormSocial-Client", "StormSocial-Client\StormSocial-Client.csproj", "{DB4A2F7B-26EB-4BE1-AF43-684D5E79148E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nicos-Tests", "Nicos-Tests\Nicos-Tests.csproj", "{920D5F4A-D0BD-4A4C-9682-40FEF855DD75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DB4A2F7B-26EB-4BE1-AF43-684D5E79148E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB4A2F7B-26EB-4BE1-AF43-684D5E79148E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB4A2F7B-26EB-4BE1-AF43-684D5E79148E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{920D5F4A-D0BD-4A4C-9682-40FEF855DD75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{920D5F4A-D0BD-4A4C-9682-40FEF855DD75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{920D5F4A-D0BD-4A4C-9682-40FEF855DD75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{920D5F4A-D0BD-4A4C-9682-40FEF855DD75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
