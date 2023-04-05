@@ -19,26 +19,24 @@ namespace StormSocial_Server.Classes
         private string email;
         private string password;
 
-        private void addToFile()
-        {
-            string fileName = "loginCredits.txt";
-
-            if(File.Exists(fileName))
-            {
-                using(StreamWriter fout = new StreamWriter(fileName, true)) //open file to append
-                {
-                    fout.WriteLine(this.getEmail() + ";" + this.getPassword()); //add credentials to the file
-                }
-            }
-            else
-            {
-                using (FileStream stream = File.Create(fileName)); // if file does not exist create a new one
-                addToFile(); //recall function to add the credentials to file
-            }
-        }
         private bool checkForExistingEmailInFile(string email)
         {
+            string fileName = "profiles.txt";
 
+            using (StreamReader reader = new StreamReader(fileName))
+            {
+                string line;
+                while((line = reader.ReadLine()) != null)
+                {
+                    string[] seperate = line.Split(';');
+                    if (seperate[0] == email)
+                    {
+                        return true;
+                    }
+                }
+
+            }
+            return false;
         }
 
         public Login()
@@ -52,23 +50,46 @@ namespace StormSocial_Server.Classes
             this.password = password;
         }
 
-        public string getEmail()
+        //Setters and getters
+        public string getEmail() { return this.email; }
+        public string getPassword() { return this.password; }
+        public void setEmail(string email) { this.email = email; }
+        public void setPassword(string password) { this.password = password; }
+
+
+        public int randomCode()
         {
-            return this.email;
-        }
-        public string getPassword()
-        {
-            return this.password;
-        }
-        public void setEmail(string email)
-        {
-            this.email = email;
-        }
-        public void setPassword(string password)
-        {
-            this.password = password;
+            //generate random 6 digit code
+            Random rand = new Random();
+            int verification = rand.Next(100000, 999999);
+            return verification;
         }
 
+        //this will be called from the sign up form and will pass info from the textboxes on the form
+        public bool signUp(string firstName, string lastName, string email, string password, string passConfirm)
+        {
+            bool completed = false;
+            if(password == passConfirm)
+            {
+                if(checkForExistingEmailInFile(email)) //check to see if email is already in the system
+                {
+                    //since passwords match and the email is not taken we can add to the system
+                    this.setEmail(email);
+                    this.setPassword(password);
+                    Profile profile = new Profile(firstName, lastName, this);
+                    profile.saveProfileToFile();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false; // if passwords do not match do not create account
+            }
+            return completed;
+        }
 
         public void sendEmail()
         {
@@ -86,10 +107,10 @@ namespace StormSocial_Server.Classes
             EmailTransactionalMessageData emailData = new EmailTransactionalMessageData(recipients: recipients);
             emailData.Content = new EmailContent();
             emailData.Content.Body = new List<BodyPart>();
-            BodyPart htmlBodyPart= new BodyPart();
+            BodyPart htmlBodyPart = new BodyPart();
             htmlBodyPart.ContentType = BodyContentType.HTML;
             htmlBodyPart.Charset = "utf-8";
-            htmlBodyPart.Content = "<p1>Verification Code: " + randomCode().ToString() +  "<p1>";
+            htmlBodyPart.Content = "<p1>Verification Code: " + randomCode().ToString() + "<p1>";
             BodyPart plainTextBodyPart = new BodyPart();
             plainTextBodyPart.ContentType = BodyContentType.PlainText;
             plainTextBodyPart.Charset = "utf-8";
@@ -112,28 +133,6 @@ namespace StormSocial_Server.Classes
             }
 
         }
-        public int randomCode()
-        {
-            //generate random 6 digit code
-            Random rand = new Random();
-            int verification = rand.Next(100000, 999999);
-            return verification;
-        }
-        public bool signUp(string firstName, string lastName, string email, string password, string passConfirm)
-        {
-            bool completed = false;
-            if(password == passConfirm)
-            {
 
-            }
-            else
-            {
-                return false; // if passwords do not match do not create account
-            }
-            
-
-            return completed;
-        }
-        
     }
 }
