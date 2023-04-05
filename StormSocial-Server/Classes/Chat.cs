@@ -65,3 +65,8 @@ namespace StormSocial_Server.Classes
         }
     }
 }
+/*
+ * each user will have a txt file for each conversation
+ * this will just be named email-chat1, email-chat2.....
+ * 
+ */
