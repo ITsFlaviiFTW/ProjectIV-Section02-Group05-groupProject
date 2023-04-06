@@ -30,9 +30,14 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.Logo = new System.Windows.Forms.PictureBox();
-            this.LoginPanel = new System.Windows.Forms.Panel();
             this.SloganPanel = new System.Windows.Forms.Panel();
             this.SloganText = new System.Windows.Forms.TextBox();
+            this.UsernameLabel = new System.Windows.Forms.Label();
+            this.PasswordLabel = new System.Windows.Forms.Label();
+            this.UsernamTextBox = new System.Windows.Forms.TextBox();
+            this.PasswordTextBox = new System.Windows.Forms.TextBox();
+            this.LoginButton = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Logo)).BeginInit();
             this.SloganPanel.SuspendLayout();
             this.SuspendLayout();
@@ -40,26 +45,25 @@
             // Logo
             // 
             this.Logo.BackgroundImage = global::StormSocial_Client.Properties.Resources.logo;
-            this.Logo.Location = new System.Drawing.Point(56, 174);
+            this.Logo.Location = new System.Drawing.Point(305, 112);
             this.Logo.Name = "Logo";
             this.Logo.Size = new System.Drawing.Size(560, 86);
             this.Logo.TabIndex = 0;
             this.Logo.TabStop = false;
             // 
-            // LoginPanel
-            // 
-            this.LoginPanel.Location = new System.Drawing.Point(680, 190);
-            this.LoginPanel.Name = "LoginPanel";
-            this.LoginPanel.Size = new System.Drawing.Size(372, 177);
-            this.LoginPanel.TabIndex = 1;
-            // 
             // SloganPanel
             // 
             this.SloganPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(252)))), ((int)(((byte)(252)))), ((int)(((byte)(252)))));
+            this.SloganPanel.Controls.Add(this.button2);
+            this.SloganPanel.Controls.Add(this.LoginButton);
+            this.SloganPanel.Controls.Add(this.PasswordTextBox);
+            this.SloganPanel.Controls.Add(this.UsernamTextBox);
+            this.SloganPanel.Controls.Add(this.PasswordLabel);
+            this.SloganPanel.Controls.Add(this.UsernameLabel);
             this.SloganPanel.Controls.Add(this.SloganText);
-            this.SloganPanel.Location = new System.Drawing.Point(35, 144);
+            this.SloganPanel.Location = new System.Drawing.Point(284, 82);
             this.SloganPanel.Name = "SloganPanel";
-            this.SloganPanel.Size = new System.Drawing.Size(605, 272);
+            this.SloganPanel.Size = new System.Drawing.Size(605, 328);
             this.SloganPanel.TabIndex = 2;
             // 
             // SloganText
@@ -71,6 +75,56 @@
             this.SloganText.TabIndex = 0;
             this.SloganText.Text = "Don\'t weather the storm alone - connect with others on Storm Social.";
             // 
+            // UsernameLabel
+            // 
+            this.UsernameLabel.AutoSize = true;
+            this.UsernameLabel.Location = new System.Drawing.Point(214, 186);
+            this.UsernameLabel.Name = "UsernameLabel";
+            this.UsernameLabel.Size = new System.Drawing.Size(63, 15);
+            this.UsernameLabel.TabIndex = 1;
+            this.UsernameLabel.Text = "Username:";
+            // 
+            // PasswordLabel
+            // 
+            this.PasswordLabel.AutoSize = true;
+            this.PasswordLabel.Location = new System.Drawing.Point(214, 224);
+            this.PasswordLabel.Name = "PasswordLabel";
+            this.PasswordLabel.Size = new System.Drawing.Size(60, 15);
+            this.PasswordLabel.TabIndex = 2;
+            this.PasswordLabel.Text = "Password:";
+            // 
+            // UsernamTextBox
+            // 
+            this.UsernamTextBox.Location = new System.Drawing.Point(283, 183);
+            this.UsernamTextBox.Name = "UsernamTextBox";
+            this.UsernamTextBox.Size = new System.Drawing.Size(100, 23);
+            this.UsernamTextBox.TabIndex = 3;
+            // 
+            // PasswordTextBox
+            // 
+            this.PasswordTextBox.Location = new System.Drawing.Point(283, 221);
+            this.PasswordTextBox.Name = "PasswordTextBox";
+            this.PasswordTextBox.Size = new System.Drawing.Size(100, 23);
+            this.PasswordTextBox.TabIndex = 4;
+            // 
+            // LoginButton
+            // 
+            this.LoginButton.Location = new System.Drawing.Point(245, 250);
+            this.LoginButton.Name = "LoginButton";
+            this.LoginButton.Size = new System.Drawing.Size(104, 23);
+            this.LoginButton.TabIndex = 5;
+            this.LoginButton.Text = "Login";
+            this.LoginButton.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(245, 279);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(104, 23);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "Create Account";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -78,7 +132,6 @@
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1123, 566);
-            this.Controls.Add(this.LoginPanel);
             this.Controls.Add(this.Logo);
             this.Controls.Add(this.SloganPanel);
             this.Name = "Form1";
@@ -94,8 +147,13 @@
         #endregion
 
         private PictureBox Logo;
-        private Panel LoginPanel;
         private Panel SloganPanel;
         private TextBox SloganText;
+        private Button button2;
+        private Button LoginButton;
+        private TextBox PasswordTextBox;
+        private TextBox UsernamTextBox;
+        private Label PasswordLabel;
+        private Label UsernameLabel;
     }
 }
