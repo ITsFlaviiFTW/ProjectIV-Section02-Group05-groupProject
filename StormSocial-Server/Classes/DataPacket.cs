@@ -58,6 +58,37 @@ namespace StormSocial_Server.Classes
                     return BitConverter.ToUInt32(hash, 0);
                 }
             }
+
+            // Getter methods for the public fields
+            public string GetSourceAddress()
+            {
+                return sourceAddress;
+            }
+
+            public int GetSequenceNumber()
+            {
+                return sequenceNumber;
+            }
+
+            public string GetTimeStamp()
+            {
+                return timeStamp;
+            }
+
+            public string GetDataType()
+            {
+                return dataType;
+            }
+
+            public string GetPacketData()
+            {
+                return packetData;
+            }
+
+            public uint GetChecksum()
+            {
+                return checksum;
+            }
         }
 
         public class PacketManipulation
