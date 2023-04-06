@@ -107,11 +107,13 @@ namespace StormSocial_Server.Classes
                 }
             }
 
+            // Function to serialize a data packet
             public static string SerializeDataPacketStruct(DataPacketStruct packet)
             {
                 return JsonConvert.SerializeObject(packet);
             }
 
+            // Function to deserialize a data packet
             public static DataPacketStruct DeserializeDataPacketStruct(string json)
             {
                 return JsonConvert.DeserializeObject<DataPacketStruct>(json);
