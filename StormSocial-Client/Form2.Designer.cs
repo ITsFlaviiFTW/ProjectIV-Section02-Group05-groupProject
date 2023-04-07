@@ -48,7 +48,7 @@
             // 
             // ContactsPanel
             // 
-            this.ContactsPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.ContactsPanel.BackColor = System.Drawing.Color.White;
             this.ContactsPanel.Controls.Add(this.Contact4Button);
             this.ContactsPanel.Controls.Add(this.Contact3Button);
             this.ContactsPanel.Controls.Add(this.Contact2Button);
@@ -103,7 +103,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.vScrollBar1);
             this.panel1.Controls.Add(this.SendButton);
             this.panel1.Controls.Add(this.MessageTextBox);
@@ -146,6 +146,7 @@
             this.IncomingText.Name = "IncomingText";
             this.IncomingText.Size = new System.Drawing.Size(433, 441);
             this.IncomingText.TabIndex = 2;
+            this.IncomingText.Text = "Hello\r\nLance\r\nMy\r\nName\r\nIs \r\nFlav\r\n";
             this.IncomingText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // OutgoingText
@@ -156,6 +157,7 @@
             this.OutgoingText.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OutgoingText.Size = new System.Drawing.Size(424, 441);
             this.OutgoingText.TabIndex = 1;
+            this.OutgoingText.Text = "Hello\r\nMy\r\nName\r\nIs \r\nLance\r\n";
             // 
             // CurrentChatName
             // 
@@ -176,6 +178,7 @@
             this.Controls.Add(this.ContactsPanel);
             this.Name = "Form2";
             this.Text = "Form2";
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.ContactsPanel.ResumeLayout(false);
             this.ContactsPanel.PerformLayout();
             this.panel1.ResumeLayout(false);
