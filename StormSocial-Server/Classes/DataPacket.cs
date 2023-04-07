@@ -24,6 +24,9 @@ namespace StormSocial_Server.Classes
             public string dataType; // Type of data
             public string packetData; // Actual packet data
             public uint checksum; // Checksum
+            public int totalPackets; // Total number of packets
+            public int packetIndex; // Packet index
+
 
             // Constructor to initialize the packet 
             public DataPacketStruct()

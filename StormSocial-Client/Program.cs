@@ -15,7 +15,7 @@ namespace SimpleClientServer
         // Create the socket connection
         public static Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         
-
+        [STAThread]
         static void Main(string[] args)
         {
             clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, 1234));

@@ -51,12 +51,8 @@ namespace SimpleClientServer
                 var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(Encoding.ASCII.GetString(buffer));
                 DataPacket.PacketManipulation.ProcessDataPacket(packet);
 
-                Console.WriteLine("Message Received from " + packet.GetSourceAddress() + ":" + packet.GetPacketData());
+                Console.WriteLine("Message Received from " + packet.GetSourceAddress() + ": " + packet.GetPacketData());
 
-                // Serialize the response data packet and send it back to the client
-                var responseBytes = Encoding.ASCII.GetBytes(DataPacket.PacketManipulation.SerializeDataPacketStruct(packet));
-
-                await clientSocket.SendAsync(responseBytes, SocketFlags.None);
             }
 
             // Clean up the client socket
