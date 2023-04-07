@@ -31,5 +31,10 @@ namespace StormSocial_Client
             IncomingText.ScrollToCaret();
             IncomingText.SelectionStart = IncomingText.GetCharIndexFromPosition(new Point(0, vScrollBar1.Value));
         }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
