@@ -164,6 +164,13 @@ namespace StormSocial_Server.Classes
                 string imagePath = Path.Combine(Environment.CurrentDirectory, fileName);
                 return imagePath;
             }
+            // Function to generate a unique log path (based on date/time)
+            public static string GetUniqueLogPath()
+            {
+                string fileName = "Packet Log - " + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
+                string logPath = Path.Combine(Environment.CurrentDirectory, fileName);
+                return logPath;
+            }
         }
 
         // Class contains networking-related packet functions 
