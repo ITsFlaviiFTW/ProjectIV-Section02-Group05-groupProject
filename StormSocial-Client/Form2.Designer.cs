@@ -42,6 +42,7 @@
             this.IncomingText = new System.Windows.Forms.TextBox();
             this.OutgoingText = new System.Windows.Forms.TextBox();
             this.CurrentChatName = new System.Windows.Forms.Label();
+            this.BrowsePhotosButton = new System.Windows.Forms.Button();
             this.ContactsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -104,6 +105,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.BrowsePhotosButton);
             this.panel1.Controls.Add(this.vScrollBar1);
             this.panel1.Controls.Add(this.SendButton);
             this.panel1.Controls.Add(this.MessageTextBox);
@@ -125,19 +127,21 @@
             // 
             // SendButton
             // 
-            this.SendButton.Location = new System.Drawing.Point(791, 499);
+            this.SendButton.Location = new System.Drawing.Point(791, 500);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(75, 23);
             this.SendButton.TabIndex = 4;
             this.SendButton.Text = "Send";
             this.SendButton.UseVisualStyleBackColor = true;
+            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
             // MessageTextBox
             // 
             this.MessageTextBox.Location = new System.Drawing.Point(3, 499);
             this.MessageTextBox.Name = "MessageTextBox";
-            this.MessageTextBox.Size = new System.Drawing.Size(782, 23);
+            this.MessageTextBox.Size = new System.Drawing.Size(738, 23);
             this.MessageTextBox.TabIndex = 3;
+            this.MessageTextBox.TextChanged += new System.EventHandler(this.MessageTextBox_TextChanged);
             // 
             // IncomingText
             // 
@@ -146,7 +150,6 @@
             this.IncomingText.Name = "IncomingText";
             this.IncomingText.Size = new System.Drawing.Size(433, 441);
             this.IncomingText.TabIndex = 2;
-            this.IncomingText.Text = "Hello\r\nLance\r\nMy\r\nName\r\nIs \r\nFlav\r\n";
             this.IncomingText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // OutgoingText
@@ -157,16 +160,25 @@
             this.OutgoingText.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OutgoingText.Size = new System.Drawing.Size(424, 441);
             this.OutgoingText.TabIndex = 1;
-            this.OutgoingText.Text = "Hello\r\nMy\r\nName\r\nIs \r\nLance\r\n";
             // 
             // CurrentChatName
             // 
             this.CurrentChatName.AutoSize = true;
             this.CurrentChatName.Location = new System.Drawing.Point(16, 15);
             this.CurrentChatName.Name = "CurrentChatName";
-            this.CurrentChatName.Size = new System.Drawing.Size(38, 15);
+            this.CurrentChatName.Size = new System.Drawing.Size(91, 15);
             this.CurrentChatName.TabIndex = 0;
-            this.CurrentChatName.Text = "label1";
+            this.CurrentChatName.Text = "Storm Chat v1.0";
+            // 
+            // BrowsePhotosButton
+            // 
+            this.BrowsePhotosButton.Location = new System.Drawing.Point(754, 497);
+            this.BrowsePhotosButton.Name = "BrowsePhotosButton";
+            this.BrowsePhotosButton.Size = new System.Drawing.Size(28, 27);
+            this.BrowsePhotosButton.TabIndex = 6;
+            this.BrowsePhotosButton.Text = "...";
+            this.BrowsePhotosButton.UseVisualStyleBackColor = true;
+            this.BrowsePhotosButton.Click += new System.EventHandler(this.BrowsePhotosButton_Click);
             // 
             // Form2
             // 
@@ -202,5 +214,6 @@
         private TextBox IncomingText;
         private TextBox OutgoingText;
         private Label CurrentChatName;
+        private Button BrowsePhotosButton;
     }
 }
