@@ -53,14 +53,7 @@ namespace StormSocial_Client
             // Send the data packet
             Program.clientSocket.Send(JSONbytes);
 
-            // Receive the response from the server and deserialize it
-            var buffer = new byte[1024];
-            var bytesRead = Program.clientSocket.Receive(buffer);
-            var responseJson = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-            var responsePacket = DataPacket.PacketManipulation.DeserializeDataPacketStruct(responseJson);
-
-            // Display the response packet's data
-            Console.WriteLine($"Received response packet from {responsePacket.GetSourceAddress()} with data: {responsePacket.GetPacketData()}");
+            OutgoingText.Text = userMessage;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

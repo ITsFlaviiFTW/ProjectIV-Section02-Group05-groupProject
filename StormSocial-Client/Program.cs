@@ -24,14 +24,7 @@ namespace SimpleClientServer
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
 
-            // Create a new data packet and serialize it to JSON
-            string userMessage;
-            Console.WriteLine("Enter Message to Send: ");
-            userMessage = Console.ReadLine();
-
-            var packet = new DataPacket.DataPacketStruct(1, "text/plain", userMessage, 0);
-            var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
-
+            
             /*
             // Send the JSON data packet to the server
             var bytes = Encoding.ASCII.GetBytes(json);
