@@ -151,7 +151,7 @@ namespace StormSocial_Server.Classes
                 if (receivedPacket.dataType == "text/plain")
                 {
                     // Process text
-                    string textPath = GetUniqueLogPath();
+                    string textPath = GetUniqueImagePath();
                     PacketManipulation textLogger = new PacketManipulation();
                     textLogger.LogDataPacketInfo(receivedPacket, textPath);
                 }
@@ -160,7 +160,7 @@ namespace StormSocial_Server.Classes
             // Function to generate a unique image path (based on date/time)
             public static string GetUniqueImagePath()
             {
-                string fileName = "Packet Log - " + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
+                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
                 string imagePath = Path.Combine(Environment.CurrentDirectory, fileName);
                 return imagePath;
             }

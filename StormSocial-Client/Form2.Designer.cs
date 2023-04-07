@@ -125,12 +125,14 @@
             // 
             // SendButton
             // 
+
             this.SendButton.Location = new System.Drawing.Point(791, 499);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(75, 23);
             this.SendButton.TabIndex = 4;
             this.SendButton.Text = "Send";
             this.SendButton.UseVisualStyleBackColor = true;
+            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
             // MessageTextBox
             // 
@@ -138,6 +140,7 @@
             this.MessageTextBox.Name = "MessageTextBox";
             this.MessageTextBox.Size = new System.Drawing.Size(782, 23);
             this.MessageTextBox.TabIndex = 3;
+            this.MessageTextBox.TextChanged += new System.EventHandler(this.MessageTextBox_TextChanged);
             // 
             // IncomingText
             // 
