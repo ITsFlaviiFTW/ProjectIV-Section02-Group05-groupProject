@@ -29,12 +29,18 @@ namespace StormSocial_Server.Classes
             this.lastName = string.Empty;
             this.setContacts();
         }
+
+
+        /***********SETTERS AND GETTERS******************************************/
         public void setFirstName(string firstName) { this.firstName = firstName; }
         public void setLastName(string lastName) {  this.lastName = lastName; }
         public void setLogin(Login login) { this.log_in=login; }
         public string getFirstName() { return this.firstName;}
         public string getLastName() { return this.lastName;}
         public Login GetLogin() { return this.log_in;}
+        /***********SETTERS AND GETTERS******************************************/
+
+
 
         public void saveProfileToFile()
         {

@@ -97,10 +97,10 @@ namespace StormSocial_Server.Classes
         //this will be called from the sign up form and will pass info from the textboxes on the form
         public bool signUp(string firstName, string lastName, string email, string password, string passConfirm)
         {
-            bool completed = false;
+            
             if(password == passConfirm)
             {
-                if(checkForExistingEmailInFile(email)) //check to see if email is already in the system
+                if(!checkForExistingEmailInFile(email)) //check to see if email is already in the system
                 {
                     //since passwords match and the email is not taken we can add to the system
                     this.setEmail(email);
@@ -117,7 +117,7 @@ namespace StormSocial_Server.Classes
             {
                 return false; // if passwords do not match do not create account
             }
-            return completed;
+            return true;
         }
 
         public void sendEmail()

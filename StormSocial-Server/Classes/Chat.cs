@@ -56,7 +56,7 @@ namespace StormSocial_Server.Classes
         }
         public void writeChatToFile()
         {
-            int numOfChats = getNumOfChats();
+            //int numOfChats = getNumOfChats();
             string fileName = string.Concat(this.getSender().GetLogin().getEmail(), "-data-", numOfChats, ".txt");
 
             if(File.Exists(fileName))
@@ -75,40 +75,40 @@ namespace StormSocial_Server.Classes
 
             }
         }
-        public int getNumOfChats()
-        {
-            string fileName = string.Concat(this.getSender().GetLogin().getEmail(), "-numOfChats.txt"); //filename will be <example@gmail.com-numOfChats.txt>
-            int numOfChats;
+        //public int getNumOfChats()
+        //{
+        //    string fileName = string.Concat(this.getSender().GetLogin().getEmail(), "-numOfChats.txt"); //filename will be <example@gmail.com-numOfChats.txt>
+        //    int numOfChats;
 
-            if (File.Exists(fileName)) //check to see if the file exists
-            {
-                string line;
+        //    if (File.Exists(fileName)) //check to see if the file exists
+        //    {
+        //        string line;
                 
-                using(StreamReader read = new StreamReader(fileName))
-                {
-                    line = read.ReadLine(); // read the only line of the file
-                    numOfChats = int.Parse(line); //covert contents of the line to an int
-                    //numOfChats++; //increase to reprsent the new chat being added
-                    read.Close();
-                }
-                using(StreamWriter write = new StreamWriter(fileName))
-                {
-                    write.WriteLine(numOfChats);
-                }
-            }
-            else
-            {
-                using(FileStream stream = File.Create(fileName)) ; // create file if it does'nt exist
-                using(StreamWriter write = new StreamWriter(fileName))
-                {
-                    write.WriteLine("1"); //because the file does not exist this will be first chat so we can set it to 1
-                    write.Close();
-                }
+        //        using(StreamReader read = new StreamReader(fileName))
+        //        {
+        //            line = read.ReadLine(); // read the only line of the file
+        //            numOfChats = int.Parse(line); //covert contents of the line to an int
+        //            //numOfChats++; //increase to reprsent the new chat being added
+        //            read.Close();
+        //        }
+        //        using(StreamWriter write = new StreamWriter(fileName))
+        //        {
+        //            write.WriteLine(numOfChats);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        using(FileStream stream = File.Create(fileName)) ; // create file if it does'nt exist
+        //        using(StreamWriter write = new StreamWriter(fileName))
+        //        {
+        //            write.WriteLine("1"); //because the file does not exist this will be first chat so we can set it to 1
+        //            write.Close();
+        //        }
                 
-                return 1;
-            }
-            return numOfChats;
-        }
+        //        return 1;
+        //    }
+        //    return numOfChats;
+        //}
     }
 }
 /*
