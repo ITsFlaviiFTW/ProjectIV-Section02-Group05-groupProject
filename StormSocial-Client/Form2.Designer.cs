@@ -42,6 +42,7 @@
             this.IncomingText = new System.Windows.Forms.TextBox();
             this.OutgoingText = new System.Windows.Forms.TextBox();
             this.CurrentChatName = new System.Windows.Forms.Label();
+            this.BrowsePhotosButton = new System.Windows.Forms.Button();
             this.ContactsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -104,6 +105,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.BrowsePhotosButton);
             this.panel1.Controls.Add(this.vScrollBar1);
             this.panel1.Controls.Add(this.SendButton);
             this.panel1.Controls.Add(this.MessageTextBox);
@@ -125,19 +127,21 @@
             // 
             // SendButton
             // 
+            this.SendButton.Location = new System.Drawing.Point(791, 500);
             this.SendButton.Location = new System.Drawing.Point(791, 499);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(75, 23);
             this.SendButton.TabIndex = 4;
             this.SendButton.Text = "Send";
             this.SendButton.UseVisualStyleBackColor = true;
+            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
             // MessageTextBox
             // 
             this.MessageTextBox.Location = new System.Drawing.Point(3, 499);
             this.MessageTextBox.Name = "MessageTextBox";
-            this.MessageTextBox.Size = new System.Drawing.Size(782, 23);
             this.MessageTextBox.TabIndex = 3;
+            this.MessageTextBox.TextChanged += new System.EventHandler(this.MessageTextBox_TextChanged);
             // 
             // IncomingText
             // 
@@ -164,9 +168,7 @@
             this.CurrentChatName.AutoSize = true;
             this.CurrentChatName.Location = new System.Drawing.Point(16, 15);
             this.CurrentChatName.Name = "CurrentChatName";
-            this.CurrentChatName.Size = new System.Drawing.Size(38, 15);
             this.CurrentChatName.TabIndex = 0;
-            this.CurrentChatName.Text = "label1";
             // 
             // Form2
             // 
@@ -202,5 +204,6 @@
         private TextBox IncomingText;
         private TextBox OutgoingText;
         private Label CurrentChatName;
+        private Button BrowsePhotosButton;
     }
 }
