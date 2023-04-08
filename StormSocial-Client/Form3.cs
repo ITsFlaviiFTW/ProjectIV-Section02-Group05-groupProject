@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StormSocial_Server.Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,11 +20,19 @@ namespace StormSocial_Client
 
         private void confirmChatButton_Click(object sender, EventArgs e)
         {
-            //Create new contact here
-
-            Form2 Form2 = new Form2();
-            Form2.Show();
-            this.Hide();
+            string existingEmail = chatTextBox.Text;
+            Login email = new Login();
+            email.setEmail(existingEmail);
+            if (email.checkForExistingEmailInFile(existingEmail) == true)
+            {
+                Form2 Form2 = new Form2();
+                Form2.Show();
+                this.Hide();
+            }
+            else
+            {
+                errorLabel.Text = "Email does not exist. Please try again.";
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ namespace StormSocial_Server.Classes
             }
             else
             {
-                using (FileStream newFile = File.Create(fileName)) ;//Create new file
+                using (FileStream newFile = File.Create(fileName)); //Create new file
 
             }
         }

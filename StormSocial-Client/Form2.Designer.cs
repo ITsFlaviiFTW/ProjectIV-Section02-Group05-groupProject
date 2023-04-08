@@ -42,6 +42,7 @@
             this.IncomingText = new System.Windows.Forms.TextBox();
             this.OutgoingText = new System.Windows.Forms.TextBox();
             this.CurrentChatName = new System.Windows.Forms.Label();
+            this.differentChatButton = new System.Windows.Forms.Button();
             this.AddContactButton = new System.Windows.Forms.Button();
             this.ContactsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
