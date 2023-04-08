@@ -112,7 +112,7 @@ namespace StormSocial_Server.Classes
         {
             // Store the socket and buffer in fields
             public readonly Socket Socket;
-            public readonly byte[] Buffer = new byte[10000000];
+            public readonly byte[] Buffer = new byte[1000000];
 
             public ClientConnection(Socket clientSocket, StateMachine stateMachine)
             {

@@ -26,39 +26,57 @@ namespace StormSocial_Server.Classes
             public uint checksum; // Checksum
             public int totalPackets; // Total number of packets
             public int packetIndex; // Packet index
-            public string email;
+            public string email; // Email address
+            public bool isLastPacket; // Bool last packet
+
             public DataPacketStruct(string email)
             {
                 this.email = email;
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
                 this.sequenceNumber = 0;
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = "text/plain";
                 this.packetData = "defaultString";
                 this.checksum = CalculateChecksum();
+                this.isLastPacket = true;
             }
 
             // Constructor to initialize the packet 
             public DataPacketStruct()
             {
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
                 this.sequenceNumber = 0;
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = "text/plain";
                 this.packetData = "defaultString";
                 this.checksum = CalculateChecksum();
+                this.isLastPacket = true;
             }
 
             // Constructor to initialize the packet with parameters
             public DataPacketStruct(string email, int sequenceNumber, string dataType, string data, uint checksum)
             {
                 this.email = email;
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
                 this.sequenceNumber = sequenceNumber;
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = dataType;
                 this.packetData = data;
                 this.checksum = checksum;
+                this.isLastPacket = true;
+            }
+
+            // Constructor to initialize the packet with parameters
+            public DataPacketStruct(string email, int sequenceNumber, string dataType, string data, uint checksum, bool isLastPacket)
+            {
+                this.email = email;
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
+                this.sequenceNumber = sequenceNumber;
+                this.timeStamp = DateTime.Now.ToString();
+                this.dataType = dataType;
+                this.packetData = data;
+                this.checksum = checksum;
+                this.isLastPacket = isLastPacket;
             }
 
             // Calculate the packet checksum using the CRC32 algorithm
@@ -197,6 +215,7 @@ namespace StormSocial_Server.Classes
         {
             private readonly int port; // Port to connect to 
             private readonly string ipAddress; // IP address of the server 
+            public const int MaxPacketSize = 1024;
 
             public DataPacketTcpSocket(string ipAddress, int port) // Constructor 
             {
@@ -204,7 +223,7 @@ namespace StormSocial_Server.Classes
                 this.port = port;
             }
 
-            // Method to send a data packet 
+            // Method to send a data packet
             public bool SendDataPacket(DataPacket.DataPacketStruct packet)
             {
                 try
@@ -219,8 +238,21 @@ namespace StormSocial_Server.Classes
                     // Convert json string to byte array
                     byte[] data = Encoding.ASCII.GetBytes(jsonString);
 
-                    // Send packet to server
-                    stream.Write(data, 0, data.Length);
+                    // Calculate the total number of packets needed to send the data
+                    int totalPackets = (int)Math.Ceiling((double)data.Length / MaxPacketSize);
+
+                    // Send data in multiple packets if it exceeds the maximum packet size
+                    for (int i = 0; i < totalPackets; i++)
+                    {
+                        int startIndex = i * MaxPacketSize;
+                        int length = Math.Min(MaxPacketSize, data.Length - startIndex);
+
+                        byte[] packetData = new byte[length];
+                        Array.Copy(data, startIndex, packetData, 0, length);
+
+                        // Send packet to server
+                        stream.Write(packetData, 0, packetData.Length);
+                    }
 
                     // Close connections
                     stream.Close();
@@ -234,41 +266,64 @@ namespace StormSocial_Server.Classes
                 }
             }
 
-            public DataPacket.DataPacketStruct ReceiveDataPacket()
+            // Function to send images (in chunks)
+            public static void SendImageInChunks(Socket socket, string imagePath)
             {
-                try
+                byte[] imageBytes = File.ReadAllBytes(imagePath);
+                string encodedImageData = DataPacket.PacketManipulation.EncodeImageToString(imageBytes);
+
+                const int imageChunkSize = DataPacketTcpSocket.MaxPacketSize; // Define the size of the image chunks
+                int totalChunks = (int)Math.Ceiling((double)encodedImageData.Length / imageChunkSize);
+
+                for (int i = 0; i < totalChunks; i++)
                 {
-                    // Start listening for incoming connections
-                    TcpListener listener = new TcpListener(IPAddress.Any, port);
-                    listener.Start();
+                    int startIndex = i * imageChunkSize;
+                    int endIndex = Math.Min(startIndex + imageChunkSize, encodedImageData.Length);
+                    int currentChunkSize = endIndex - startIndex;
+                    string currentChunkData = encodedImageData.Substring(startIndex, currentChunkSize);
 
-                    // Accept incoming connection
-                    TcpClient client = listener.AcceptTcpClient();
-                    NetworkStream stream = client.GetStream();
-                    string clientSocketAddress = client.Client.RemoteEndPoint.ToString();
+                    bool isLastPacket = (i == totalChunks - 1);
 
-                    // Read data from the stream
-                    byte[] data = new byte[client.ReceiveBufferSize];
-                    int bytesRead = stream.Read(data, 0, client.ReceiveBufferSize);
+                    var packet = new DataPacketStruct
+                    {
+                        sourceAddress = socket.LocalEndPoint.ToString(),
+                        sequenceNumber = i + 1,
+                        timeStamp = DateTime.Now.ToString(),
+                        dataType = "image",
+                        packetData = currentChunkData,
+                        isLastPacket = isLastPacket,
+                        checksum = 0
+                    };
 
-                    // Convert received byte array to json string
-                    string jsonString = Encoding.ASCII.GetString(data, 0, bytesRead);
-
-                    // Deserialize json string to packet object
-                    DataPacket.DataPacketStruct packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(jsonString);
-
-                    // Close connections
-                    stream.Close();
-                    client.Close();
-                    listener.Stop();
-
-                    // Return the received data packet
-                    return packet;
+                    var json = JsonConvert.SerializeObject(packet);
+                    var JSONbytes = Encoding.ASCII.GetBytes(json);
+                    socket.Send(JSONbytes);
                 }
-                catch (SocketException)
+            }
+
+            public static DataPacketStruct ReceiveDataPacket(Socket socket)
+            {
+                byte[] buffer = new byte[DataPacketTcpSocket.MaxPacketSize];
+                StringBuilder sb = new StringBuilder();
+
+                while (true)
                 {
-                    return null; // Return null if failed to receive data packet
+                    int bytesRead = socket.Receive(buffer);
+                    if (bytesRead == 0)
+                    {
+                        // Connection closed
+                        return null;
+                    }
+
+                    sb.Append(Encoding.ASCII.GetString(buffer, 0, bytesRead));
+                    if (sb.ToString().Contains("}"))
+                    {
+                        break;
+                    }
                 }
+
+                var packet = JsonConvert.DeserializeObject<DataPacketStruct>(sb.ToString());
+                return packet;
             }
         }
     }

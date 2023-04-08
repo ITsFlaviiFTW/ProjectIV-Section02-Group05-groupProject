@@ -26,7 +26,7 @@ namespace SimpleClientServer
             {
                 // Accept incoming client connections
                 var clientSocket = await serverSocket.AcceptAsync();
-                Console.WriteLine($"Accepted connection from {clientSocket.RemoteEndPoint}");
+                Console.WriteLine($"Accepted connection from {clientSocket.RemoteEndPoint} \n");
 
                 // Start a new task to handle the client communication
                 _ = Task.Run(() => HandleClientAsync(clientSocket));
@@ -35,14 +35,16 @@ namespace SimpleClientServer
 
         static async Task HandleClientAsync(Socket clientSocket)
         {
-            var stateMachine = new StateMachine();
-            var buffer = new byte[10000000];
+            var buffer = new byte[DataPacket.DataPacketTcpSocket.MaxPacketSize];
+            StringBuilder imageDataBuilder = new StringBuilder();
+            StringBuilder receivedDataBuilder = new StringBuilder(); // Added this line
+            string currentDataType = "";
+            string currentEmail = "";
+            bool isLastPacket = false;
 
-            // Receive and process data from the client in a loop
             while (clientSocket.Connected)
             {
-                var receivedData = "";
-                var bytesRead = await clientSocket.ReceiveAsync(buffer, SocketFlags.None);
+                int bytesRead = await clientSocket.ReceiveAsync(buffer, SocketFlags.None);
                 if (bytesRead == 0)
                 {
                     // Client disconnected
@@ -50,20 +52,60 @@ namespace SimpleClientServer
                     break;
                 }
 
-                // Convert the received bytes to a string and concatenate it with the previously received data
-                receivedData += Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                // Convert the received bytes to a string
+                string partialReceivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                receivedDataBuilder.Append(partialReceivedData);
 
+                // Check if the received data contains a complete JSON object
+                string receivedData = receivedDataBuilder.ToString();
+                if (receivedData.Count(c => c == '{') != receivedData.Count(c => c == '}'))
+                {
+                    // The received data is not a complete JSON object, wait for more data
+                    continue;
+                }
 
-                // Extract the complete message and process it
+                // Clear the receivedDataBuilder for the next packet
+                receivedDataBuilder.Clear();
+
+                // Try to deserialize the received data
                 try
                 {
                     var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(receivedData);
-                    DataPacket.PacketManipulation.ProcessDataPacket(packet);
-                    Console.WriteLine("Message Received from " + packet.GetEmail() + packet.GetSourceAddress() + ": " + packet.GetPacketData());
+                    isLastPacket = packet.isLastPacket;
+                    currentDataType = packet.GetDataType();
+                    currentEmail = packet.GetEmail();
+
+                    if (currentDataType == "image")
+                    {
+                        imageDataBuilder.Append(packet.GetPacketData());
+
+                        if (isLastPacket)
+                        {
+                            string imagePath = DataPacket.PacketManipulation.GetUniqueImagePath();
+                            string base64StringImage = imageDataBuilder.ToString();
+                            DataPacket.PacketManipulation.DecodeAndWriteImageToFile(base64StringImage, imagePath);
+                            imageDataBuilder.Clear();
+                        }
+                    }
+
+                    // Print information for each received packet
+                    Console.WriteLine($"Packet Received from {packet.GetSourceAddress()} (Email: {currentEmail}):");
+                    Console.WriteLine($"  Sequence Number: {packet.GetSequenceNumber()}");
+                    Console.WriteLine($"  Timestamp: {packet.GetTimeStamp()}");
+                    Console.WriteLine($"  Data Type: {packet.GetDataType()}");
+                    Console.WriteLine($"  Data Size: {packet.GetPacketData().Length} bytes\n");
+                }
+                catch (JsonReaderException ex)
+                {
+                    // Error deserializing packet
+                    Console.WriteLine($"Error deserializing packet: {ex.Message}");
+                    continue;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An error occurred while processing the message: {ex.Message}");
+                    // Other error occurred
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    break;
                 }
             }
 
@@ -71,7 +113,5 @@ namespace SimpleClientServer
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
         }
-
-
     }
 }
