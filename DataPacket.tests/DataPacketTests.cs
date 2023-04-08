@@ -33,7 +33,7 @@ namespace StormSocial_Server.Tests
         public void T002_ParameterizedConstructor_VerifyContents()
         {
             // Arrange
-            var packet = new DataPacket.DataPacketStruct(1, "text/plain", "Test packet", (uint)12345); // Parameterized constructor
+            var packet = new DataPacket.DataPacketStruct("sampleEmail", 1, "text/plain", "Test packet", (uint)12345); // Parameterized constructor
 
             // Assert
             Assert.AreEqual(packet.sequenceNumber, 1);
@@ -47,7 +47,7 @@ namespace StormSocial_Server.Tests
         public void T003_CalculateChecksum_ModifyContents_Compare()
         {
             // Arrange
-            var packet = new DataPacket.DataPacketStruct(1, "text/plain", "Test packet", 0); // Parameterized constructor
+            var packet = new DataPacket.DataPacketStruct("sampleEmail", 1, "text/plain", "Test packet", 0); // Parameterized constructor
 
             // Act
             packet.checksum = 12345; // Set the checksum to a known value
@@ -66,9 +66,10 @@ namespace StormSocial_Server.Tests
             string dataType = "image/jpeg";
             string data = "abc123";
             int checksum = 456;
+            string testEmail = "sampleEmail";
 
             // Act
-            DataPacket.DataPacketStruct packet = new DataPacket.DataPacketStruct(sequenceNumber, dataType, data, (uint)checksum);
+            DataPacket.DataPacketStruct packet = new DataPacket.DataPacketStruct(testEmail, sequenceNumber, dataType, data, (uint)checksum);
             string buffer = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
 
             DataPacket.DataPacketStruct deserializedPacket = DataPacket.PacketManipulation.DeserializeDataPacketStruct(buffer);
