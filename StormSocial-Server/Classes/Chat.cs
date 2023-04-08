@@ -54,6 +54,7 @@ namespace StormSocial_Server.Classes
             message.Add(m);
 
         }
+        /**
         public void writeChatToFile()
         {
             //int numOfChats = getNumOfChats();
@@ -75,6 +76,7 @@ namespace StormSocial_Server.Classes
 
             }
         }
+        **/
         //public int getNumOfChats()
         //{
         //    string fileName = string.Concat(this.getSender().GetLogin().getEmail(), "-numOfChats.txt"); //filename will be <example@gmail.com-numOfChats.txt>

@@ -141,7 +141,6 @@
             // 
             // SendButton
             // 
-            this.SendButton.Location = new System.Drawing.Point(791, 500);
             this.SendButton.Location = new System.Drawing.Point(791, 499);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(75, 23);
@@ -154,6 +153,7 @@
             // 
             this.MessageTextBox.Location = new System.Drawing.Point(3, 499);
             this.MessageTextBox.Name = "MessageTextBox";
+            this.MessageTextBox.Size = new System.Drawing.Size(560, 23);
             this.MessageTextBox.TabIndex = 3;
             this.MessageTextBox.TextChanged += new System.EventHandler(this.MessageTextBox_TextChanged);
             // 
@@ -164,7 +164,6 @@
             this.IncomingText.Name = "IncomingText";
             this.IncomingText.Size = new System.Drawing.Size(433, 441);
             this.IncomingText.TabIndex = 2;
-            this.IncomingText.Text = "Hello\r\nLance\r\nMy\r\nName\r\nIs \r\nFlav\r\n";
             this.IncomingText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // OutgoingText
@@ -175,16 +174,15 @@
             this.OutgoingText.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OutgoingText.Size = new System.Drawing.Size(424, 441);
             this.OutgoingText.TabIndex = 1;
-            this.OutgoingText.Text = "Hello\r\nMy\r\nName\r\nIs \r\nLance\r\n";
             // 
             // CurrentChatName
             // 
             this.CurrentChatName.AutoSize = true;
             this.CurrentChatName.Location = new System.Drawing.Point(16, 15);
             this.CurrentChatName.Name = "CurrentChatName";
+            this.CurrentChatName.Size = new System.Drawing.Size(91, 15);
             this.CurrentChatName.TabIndex = 0;
             this.CurrentChatName.Text = "Storm Chat v1.0";
-            // 
             // 
             // Form2
             // 
