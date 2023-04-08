@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace StormSocial_Server.Classes
 {
-    internal class Profile
+    public class Profile
     {
         private string firstName;
         private string lastName;
         Login log_in;
 
-        public Profile(string firstName, string lastName, Login log_in)
+         public Profile(string firstName, string lastName, Login log_in)
         {
             this.firstName = firstName;
             this.lastName = lastName;

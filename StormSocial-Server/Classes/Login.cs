@@ -14,7 +14,7 @@ using ElasticEmail.Model;
 
 namespace StormSocial_Server.Classes
 {
-    internal class Login
+    public class Login
     {
         private string email;
         private string password;
@@ -100,13 +100,14 @@ namespace StormSocial_Server.Classes
             bool completed = false;
             if(password == passConfirm)
             {
-                if(checkForExistingEmailInFile(email)) //check to see if email is already in the system
+                if(!checkForExistingEmailInFile(email)) //check to see if email is already in the system
                 {
                     //since passwords match and the email is not taken we can add to the system
                     this.setEmail(email);
                     this.setPassword(password);
                     Profile profile = new Profile(firstName, lastName, this);
                     profile.saveProfileToFile();
+                    
                 }
                 else
                 {
@@ -117,7 +118,7 @@ namespace StormSocial_Server.Classes
             {
                 return false; // if passwords do not match do not create account
             }
-            return completed;
+            return true;
         }
 
         public void sendEmail()
