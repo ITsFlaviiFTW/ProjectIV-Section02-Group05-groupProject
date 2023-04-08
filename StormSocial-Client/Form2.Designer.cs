@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.ContactsPanel = new System.Windows.Forms.Panel();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.differentChatButton = new System.Windows.Forms.Button();
+            this.AddContactButton = new System.Windows.Forms.Button();
             this.Contact4Button = new System.Windows.Forms.Button();
             this.Contact3Button = new System.Windows.Forms.Button();
             this.Contact2Button = new System.Windows.Forms.Button();
@@ -43,11 +45,9 @@
             this.IncomingText = new System.Windows.Forms.TextBox();
             this.OutgoingText = new System.Windows.Forms.TextBox();
             this.CurrentChatName = new System.Windows.Forms.Label();
-            this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.AddContactButton = new System.Windows.Forms.Button();
             this.ContactsPanel.SuspendLayout();
-            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ContactsPanel
@@ -66,6 +66,14 @@
             this.ContactsPanel.Size = new System.Drawing.Size(200, 542);
             this.ContactsPanel.TabIndex = 0;
             // 
+            // pictureBox
+            // 
+            this.pictureBox.Location = new System.Drawing.Point(15, 256);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(171, 142);
+            this.pictureBox.TabIndex = 6;
+            this.pictureBox.TabStop = false;
+            // 
             // differentChatButton
             // 
             this.differentChatButton.Location = new System.Drawing.Point(29, 497);
@@ -75,6 +83,16 @@
             this.differentChatButton.Text = "Chat With Someone Else!";
             this.differentChatButton.UseVisualStyleBackColor = true;
             this.differentChatButton.Click += new System.EventHandler(this.differentChatButton_Click);
+            // 
+            // AddContactButton
+            // 
+            this.AddContactButton.Location = new System.Drawing.Point(44, 499);
+            this.AddContactButton.Name = "AddContactButton";
+            this.AddContactButton.Size = new System.Drawing.Size(98, 23);
+            this.AddContactButton.TabIndex = 5;
+            this.AddContactButton.Text = "Add a contact";
+            this.AddContactButton.UseVisualStyleBackColor = true;
+            this.AddContactButton.Click += new System.EventHandler(this.AddContactButton_Click);
             // 
             // Contact4Button
             // 
@@ -201,22 +219,6 @@
             this.CurrentChatName.TabIndex = 0;
             this.CurrentChatName.Text = "Storm Chat v1.0";
             // 
-            // pictureBox
-            // AddContactButton
-            // 
-            this.pictureBox.Location = new System.Drawing.Point(15, 256);
-            this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(171, 142);
-            this.pictureBox.TabIndex = 6;
-            this.pictureBox.TabStop = false;
-            this.AddContactButton.Location = new System.Drawing.Point(44, 499);
-            this.AddContactButton.Name = "AddContactButton";
-            this.AddContactButton.Size = new System.Drawing.Size(98, 23);
-            this.AddContactButton.TabIndex = 5;
-            this.AddContactButton.Text = "Add a contact";
-            this.AddContactButton.UseVisualStyleBackColor = true;
-            this.AddContactButton.Click += new System.EventHandler(this.AddContactButton_Click);
-            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -229,9 +231,9 @@
             this.Load += new System.EventHandler(this.Form2_Load);
             this.ContactsPanel.ResumeLayout(false);
             this.ContactsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
