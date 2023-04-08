@@ -26,26 +26,6 @@ namespace SimpleClientServer
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
-    
-
-        /*
-        // Send the JSON data packet to the server
-        var bytes = Encoding.ASCII.GetBytes(json);
-        clientSocket.Send(bytes);
-
-        // Receive the response from the server and deserialize it
-        var buffer = new byte[1024];
-        var bytesRead = clientSocket.Receive(buffer);
-        var responseJson = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-        var responsePacket = DataPacket.PacketManipulation.DeserializeDataPacketStruct(responseJson);
-
-        // Display the response packet's data
-        Console.WriteLine($"Received response packet from {responsePacket.GetSourceAddress()} with data: {responsePacket.GetPacketData()}");
-
-        // Clean up the client socket
-        clientSocket.Shutdown(SocketShutdown.Both);
-        clientSocket.Close();
-        */
     }
 }
 

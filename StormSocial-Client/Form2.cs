@@ -54,8 +54,15 @@ namespace StormSocial_Client
             // Retrieve the user's email address
             string userEmail = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
 
-            // Send the data packet 
-            var packet = new DataPacket.DataPacketStruct(1, "text/plain", userMessage, 0);
+            // Create the data packet
+            var packet = new DataPacket.DataPacketStruct
+            {
+                sequenceNumber = 1,
+                dataType = "text/plain",
+                packetData = userMessage,
+                checksum = 0
+            };
+
             var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
             var JSONbytes = Encoding.ASCII.GetBytes(json);
 
@@ -85,42 +92,53 @@ namespace StormSocial_Client
         {
             try
             {
-                // Create a new instance of the OpenFileDialog
+                const int imageChunkSize = DataPacket.DataPacketTcpSocket.MaxPacketSize; // Define the size of the image chunks
+
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-
-                // Set the file filter to only show image files
                 openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
-
-                // Allow the user to select only one file
                 openFileDialog.Multiselect = false;
 
-                // Show the dialog and check if the user clicked OK
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    // Read the contents of the selected file into a byte array
                     byte[] imageData = File.ReadAllBytes(openFileDialog.FileName);
+                    string encodedImageData = Convert.ToBase64String(imageData); // Encode the image data as a base64 string
 
-                    // Convert the byte array to a Base64-encoded string using your EncodeImageToString() method
-                    string encodedImageData = DataPacket.PacketManipulation.EncodeImageToString(imageData);
+                    int totalChunks = (int)Math.Ceiling((double)encodedImageData.Length / imageChunkSize);
+                    for (int i = 0; i < totalChunks; i++)
+                    {
+                        int startIndex = i * imageChunkSize;
+                        int endIndex = Math.Min(startIndex + imageChunkSize, encodedImageData.Length);
+                        int currentChunkSize = endIndex - startIndex;
+                        string currentChunkData = encodedImageData.Substring(startIndex, currentChunkSize);
 
-                    // Use the encodedImageData to send a packet 
-                    // Create the data packet
-                    var packet = new DataPacket.DataPacketStruct(1, "image", encodedImageData, 0);
-                    var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
-                    var JSONbytes = Encoding.ASCII.GetBytes(json);
-                    Program.clientSocket.Send(JSONbytes);
+                        bool isLastPacket = (i == totalChunks - 1);
 
-                    // Display the selected image in the pictureBox
+                        var packet = new DataPacket.DataPacketStruct
+                        {
+                            sequenceNumber = i + 1,
+                            dataType = "image",
+                            packetData = currentChunkData,
+                            isLastPacket = isLastPacket,
+                            checksum = 0
+                        };
+
+                        var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                        var JSONbytes = Encoding.ASCII.GetBytes(json); // Use ASCII to encode the JSON
+
+                        // Add a delay to ensure that the server can process the packets in the correct order
+                        Thread.Sleep(10);
+                        Program.clientSocket.Send(JSONbytes);
+                    }
                     pictureBox.Image = Image.FromFile(openFileDialog.FileName);
-                    pictureBox.SizeMode = PictureBoxSizeMode.StretchImage; // Optional, to resize the image to fit the PictureBox
+                    pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                 }
             }
             catch (Exception ex)
             {
-                // Handle the exception, e.g. display an error message to the user
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
         }
+
 
 
         private void Contact1Button_Click(object sender, EventArgs e)

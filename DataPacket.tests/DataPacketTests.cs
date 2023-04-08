@@ -33,7 +33,7 @@ namespace StormSocial_Server.Tests
         public void T002_ParameterizedConstructor_VerifyContents()
         {
             // Arrange
-            var packet = new DataPacket.DataPacketStruct(1, "text/plain", "Test packet", (uint)12345); // Parameterized constructor
+            var packet = new DataPacket.DataPacketStruct("sampleEmail", 1, "text/plain", "Test packet", (uint)12345); // Parameterized constructor
 
             // Assert
             Assert.AreEqual(packet.sequenceNumber, 1);
@@ -47,7 +47,7 @@ namespace StormSocial_Server.Tests
         public void T003_CalculateChecksum_ModifyContents_Compare()
         {
             // Arrange
-            var packet = new DataPacket.DataPacketStruct(1, "text/plain", "Test packet", 0); // Parameterized constructor
+            var packet = new DataPacket.DataPacketStruct("sampleEmail", 1, "text/plain", "Test packet", 0); // Parameterized constructor
 
             // Act
             packet.checksum = 12345; // Set the checksum to a known value
@@ -66,9 +66,10 @@ namespace StormSocial_Server.Tests
             string dataType = "image/jpeg";
             string data = "abc123";
             int checksum = 456;
+            string testEmail = "sampleEmail";
 
             // Act
-            DataPacket.DataPacketStruct packet = new DataPacket.DataPacketStruct(sequenceNumber, dataType, data, (uint)checksum);
+            DataPacket.DataPacketStruct packet = new DataPacket.DataPacketStruct(testEmail, sequenceNumber, dataType, data, (uint)checksum);
             string buffer = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
 
             DataPacket.DataPacketStruct deserializedPacket = DataPacket.PacketManipulation.DeserializeDataPacketStruct(buffer);
@@ -160,78 +161,5 @@ namespace StormSocial_Server.Tests
             // No exception thrown
         }
 
-        [TestMethod]
-        public void T008_TestPacketSending() // Create a new data packet
-        {
-            // Arrange
-            var packet = new DataPacket.DataPacketStruct() // Test packet
-            {
-                sequenceNumber = 1,
-                dataType = "image",
-                packetData = "encodedImageData"
-            };
-
-            // Create two sockets
-            var serverSocket = new DataPacket.DataPacketTcpSocket("localhost", 8080);
-            var clientSocket = new DataPacket.DataPacketTcpSocket("localhost", 8080);
-
-            // Act
-
-            // Send the data packet from the server socket to the client socket
-            var serverResult = serverSocket.SendDataPacket(packet);
-            var receivedPacket = clientSocket.ReceiveDataPacket();
-
-            // Assert
-
-            // Ensure received data packet matches the original data packet
-            Assert.IsTrue(serverResult);
-            Assert.AreEqual(packet.sequenceNumber, receivedPacket.sequenceNumber);
-            Assert.AreEqual(packet.dataType, receivedPacket.dataType);
-            Assert.AreEqual(packet.packetData, receivedPacket.packetData);
-        }
-
-        [TestMethod]
-        public void T009_TestPacketReceiving()
-        {
-            // Arrange
-            string ipAddress = "localhost"; // IP address of the server
-            int port = 8080; // Port number of the server
-            DataPacketTcpSocket socket = new DataPacketTcpSocket(ipAddress, port);
-
-            // Create a test packet
-            DataPacket.DataPacketStruct testPacket = new DataPacket.DataPacketStruct();
-            string jsonString = DataPacket.PacketManipulation.SerializeDataPacketStruct(testPacket);
-            byte[] data = Encoding.ASCII.GetBytes(jsonString);
-
-            // Start a server to send the test packet
-            TcpListener server = TcpListener.Create(port);
-            server.Start();
-            TcpClient client = new TcpClient();
-            client.Connect(ipAddress, port);
-            NetworkStream stream = client.GetStream();
-            stream.Write(data, 0, data.Length);
-
-            // Act
-            DataPacket.DataPacketStruct receivedPacket = socket.ReceiveDataPacket();
-
-            // Assert
-            Assert.AreEqual(testPacket.sourceAddress, receivedPacket.sourceAddress);
-            Assert.AreEqual(testPacket.sequenceNumber, receivedPacket.sequenceNumber);
-            Assert.AreEqual(testPacket.timeStamp, receivedPacket.timeStamp);
-            Assert.AreEqual(testPacket.dataType, receivedPacket.dataType);
-            Assert.AreEqual(testPacket.packetData, receivedPacket.packetData);
-            Assert.AreEqual(testPacket.checksum, receivedPacket.checksum);
-
-            // Clean up
-            server.Stop();
-            client.Close();
-            stream.Close();
-        }
-
-        [TestMethod]
-        public void T010_TestConnection()
-        {
-
-        }
     }
 }

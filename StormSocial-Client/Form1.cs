@@ -35,7 +35,15 @@ namespace StormSocial_Client
                 // Add the login object to the loggedInClients dictionary
                 Program.loggedInClients.Add(clientSocketAddress, login);
                 string email = EmailLoginText.Text;
-                var emailPacket = new DataPacket.DataPacketStruct(1, "text/plain", Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail(), 0);
+
+                // Arrange
+                var emailPacket = new DataPacket.DataPacketStruct
+                {
+                    sequenceNumber = 1,
+                    dataType = "text/plain",
+                    email = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail()
+                };
+
 
                 // Serialize the emailPacket to JSON
                 var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(emailPacket);
