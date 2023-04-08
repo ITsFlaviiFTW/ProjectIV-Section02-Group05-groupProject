@@ -18,6 +18,7 @@ namespace StormSocial_Client
 {
     public partial class Form2 : Form
     {
+        public string ContactEmail { get; set; }
         public Form2()
         {
             InitializeComponent();
@@ -39,12 +40,19 @@ namespace StormSocial_Client
 
         private void Form2_Load(object sender, EventArgs e)
         {
-
+            if (!string.IsNullOrEmpty(ContactEmail))
+            {
+                Contact1Button.Visible = true;
+                Contact1Button.Text = ContactEmail;
+            }
         }
 
         private void SendButton_Click(object sender, EventArgs e)
         {
             string userMessage = MessageTextBox.Text;
+
+            // Retrieve the user's email address
+            string userEmail = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
 
             // Send the data packet 
             var packet = new DataPacket.DataPacketStruct(1, "text/plain", userMessage, 0);
@@ -52,13 +60,12 @@ namespace StormSocial_Client
             var JSONbytes = Encoding.ASCII.GetBytes(json);
 
             // Send the packet 
-
-            // Send the data packet
             Program.clientSocket.Send(JSONbytes);
 
-
-            OutgoingText.AppendText(userMessage + Environment.NewLine);
+            // Append the email address and message to the OutgoingText TextBox
+            OutgoingText.AppendText(userEmail + ": " + userMessage + Environment.NewLine);
         }
+
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
@@ -98,14 +105,14 @@ namespace StormSocial_Client
 
                     // Use the encodedImageData to send a packet 
                     // Create the data packet
-                    // Send the data packet
                     var packet = new DataPacket.DataPacketStruct(1, "image", encodedImageData, 0);
                     var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
                     var JSONbytes = Encoding.ASCII.GetBytes(json);
                     Program.clientSocket.Send(JSONbytes);
 
-                    // Send the data packet
-                    Program.clientSocket.Send(JSONbytes);
+                    // Display the selected image in the pictureBox
+                    pictureBox.Image = Image.FromFile(openFileDialog.FileName);
+                    pictureBox.SizeMode = PictureBoxSizeMode.StretchImage; // Optional, to resize the image to fit the PictureBox
                 }
             }
             catch (Exception ex)
@@ -113,8 +120,8 @@ namespace StormSocial_Client
                 // Handle the exception, e.g. display an error message to the user
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
-
         }
+
 
         private void Contact1Button_Click(object sender, EventArgs e)
         {
