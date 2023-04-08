@@ -89,7 +89,7 @@ namespace SimpleClientServer
                     }
 
                     // Print information for each received packet
-                    Console.WriteLine($"Packet Received from {packet.GetSourceAddress()} (Email: {currentEmail}):");
+                    Console.WriteLine($"Packet Received from {packet.GetSourceAddress()}");
                     Console.WriteLine($"  Sequence Number: {packet.GetSequenceNumber()}");
                     Console.WriteLine($"  Timestamp: {packet.GetTimeStamp()}");
                     Console.WriteLine($"  Data Type: {packet.GetDataType()}");
