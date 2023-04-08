@@ -114,5 +114,12 @@ namespace StormSocial_Client
         {
 
         }
+
+        private void AddContactButton_Click(object sender, EventArgs e)
+        {
+            Form3 Form3 = new Form3();
+            Form3.Show();
+            this.Hide();
+        }
     }
 }

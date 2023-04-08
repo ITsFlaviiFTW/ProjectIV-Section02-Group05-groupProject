@@ -42,6 +42,7 @@
             this.IncomingText = new System.Windows.Forms.TextBox();
             this.OutgoingText = new System.Windows.Forms.TextBox();
             this.CurrentChatName = new System.Windows.Forms.Label();
+            this.AddContactButton = new System.Windows.Forms.Button();
             this.ContactsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -49,6 +50,7 @@
             // ContactsPanel
             // 
             this.ContactsPanel.BackColor = System.Drawing.Color.White;
+            this.ContactsPanel.Controls.Add(this.AddContactButton);
             this.ContactsPanel.Controls.Add(this.Contact4Button);
             this.ContactsPanel.Controls.Add(this.Contact3Button);
             this.ContactsPanel.Controls.Add(this.Contact2Button);
@@ -141,7 +143,6 @@
             // 
             // SendButton
             // 
-            this.SendButton.Location = new System.Drawing.Point(791, 500);
             this.SendButton.Location = new System.Drawing.Point(791, 499);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(75, 23);
@@ -154,6 +155,7 @@
             // 
             this.MessageTextBox.Location = new System.Drawing.Point(3, 499);
             this.MessageTextBox.Name = "MessageTextBox";
+            this.MessageTextBox.Size = new System.Drawing.Size(100, 23);
             this.MessageTextBox.TabIndex = 3;
             this.MessageTextBox.TextChanged += new System.EventHandler(this.MessageTextBox_TextChanged);
             // 
@@ -182,9 +184,19 @@
             this.CurrentChatName.AutoSize = true;
             this.CurrentChatName.Location = new System.Drawing.Point(16, 15);
             this.CurrentChatName.Name = "CurrentChatName";
+            this.CurrentChatName.Size = new System.Drawing.Size(91, 15);
             this.CurrentChatName.TabIndex = 0;
             this.CurrentChatName.Text = "Storm Chat v1.0";
             // 
+            // AddContactButton
+            // 
+            this.AddContactButton.Location = new System.Drawing.Point(44, 499);
+            this.AddContactButton.Name = "AddContactButton";
+            this.AddContactButton.Size = new System.Drawing.Size(98, 23);
+            this.AddContactButton.TabIndex = 5;
+            this.AddContactButton.Text = "Add a contact";
+            this.AddContactButton.UseVisualStyleBackColor = true;
+            this.AddContactButton.Click += new System.EventHandler(this.AddContactButton_Click);
             // 
             // Form2
             // 
@@ -220,5 +232,6 @@
         private TextBox OutgoingText;
         private Label CurrentChatName;
         private Button BrowsePhotosButton;
+        private Button AddContactButton;
     }
 }

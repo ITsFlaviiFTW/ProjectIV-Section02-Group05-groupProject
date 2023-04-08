@@ -36,7 +36,7 @@ namespace StormSocial_Server.Classes
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = "text/plain";
                 this.packetData = "defaultString";
-                this.checksum = CalculateChecksum();  
+                this.checksum = CalculateChecksum();
             }
 
             // Constructor to initialize the packet with parameters
@@ -254,240 +254,241 @@ namespace StormSocial_Server.Classes
                 }
             }
         }
-    public class DataPacket // Class for structure of 
-    {
-        public class DataPacketStruct
+        public class DataPacket // Class for structure of 
         {
-            public string sourceAddress; // Source address 
-            public int sequenceNumber; // Sequence number
-            public string timeStamp; // Timestamp
-            public string dataType; // Type of data
-            public string packetData; // Actual packet data
-            public uint checksum; // Checksum
-
-            // Constructor to initialize the packet 
-            public DataPacketStruct()
+            public class DataPacketStruct
             {
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
-                this.sequenceNumber = 0;
-                this.timeStamp = DateTime.Now.ToString();
-                this.dataType = "text/plain";
-                this.packetData = "defaultString";
-                this.checksum = CalculateChecksum();  
-            }
+                public string sourceAddress; // Source address 
+                public int sequenceNumber; // Sequence number
+                public string timeStamp; // Timestamp
+                public string dataType; // Type of data
+                public string packetData; // Actual packet data
+                public uint checksum; // Checksum
 
-            // Constructor to initialize the packet with parameters
-            public DataPacketStruct(int sequenceNumber, string dataType, string data, uint checksum)
-            {
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
-                this.sequenceNumber = sequenceNumber;
-                this.timeStamp = DateTime.Now.ToString();
-                this.dataType = dataType;
-                this.packetData = data;
-                this.checksum = checksum;
-            }
-
-            // Calculate the packet checksum using the CRC32 algorithm
-            public uint CalculateChecksum()
-            {
-                using (var crc32 = new Crc32Algorithm())
+                // Constructor to initialize the packet 
+                public DataPacketStruct()
                 {
-                    var sourceData = $"{sourceAddress},{sequenceNumber},{timeStamp},{dataType},{packetData}";
-                    byte[] data = Encoding.ASCII.GetBytes(sourceData);
-                    byte[] hash = crc32.ComputeHash(data);
-                    return BitConverter.ToUInt32(hash, 0);
+                    this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                    this.sequenceNumber = 0;
+                    this.timeStamp = DateTime.Now.ToString();
+                    this.dataType = "text/plain";
+                    this.packetData = "defaultString";
+                    this.checksum = CalculateChecksum();
+                }
+
+                // Constructor to initialize the packet with parameters
+                public DataPacketStruct(int sequenceNumber, string dataType, string data, uint checksum)
+                {
+                    this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                    this.sequenceNumber = sequenceNumber;
+                    this.timeStamp = DateTime.Now.ToString();
+                    this.dataType = dataType;
+                    this.packetData = data;
+                    this.checksum = checksum;
+                }
+
+                // Calculate the packet checksum using the CRC32 algorithm
+                public uint CalculateChecksum()
+                {
+                    using (var crc32 = new Crc32Algorithm())
+                    {
+                        var sourceData = $"{sourceAddress},{sequenceNumber},{timeStamp},{dataType},{packetData}";
+                        byte[] data = Encoding.ASCII.GetBytes(sourceData);
+                        byte[] hash = crc32.ComputeHash(data);
+                        return BitConverter.ToUInt32(hash, 0);
+                    }
+                }
+
+                // Getter methods for the public fields
+                public string GetSourceAddress()
+                {
+                    return sourceAddress;
+                }
+
+                public int GetSequenceNumber()
+                {
+                    return sequenceNumber;
+                }
+
+                public string GetTimeStamp()
+                {
+                    return timeStamp;
+                }
+
+                public string GetDataType()
+                {
+                    return dataType;
+                }
+
+                public string GetPacketData()
+                {
+                    return packetData;
+                }
+
+                public uint GetChecksum()
+                {
+                    return checksum;
                 }
             }
 
-            // Getter methods for the public fields
-            public string GetSourceAddress()
+            public class PacketManipulation
             {
-                return sourceAddress;
-            }
-
-            public int GetSequenceNumber()
-            {
-                return sequenceNumber;
-            }
-
-            public string GetTimeStamp()
-            {
-                return timeStamp;
-            }
-
-            public string GetDataType()
-            {
-                return dataType;
-            }
-
-            public string GetPacketData()
-            {
-                return packetData;
-            }
-
-            public uint GetChecksum()
-            {
-                return checksum;
-            }
-        }
-
-        public class PacketManipulation
-        {
-            // Function to log the data packet information to a text file
-            public void LogDataPacketInfo(DataPacketStruct packet, string filename)
-            {
-                using (StreamWriter outputFile = new StreamWriter(filename, true))
+                // Function to log the data packet information to a text file
+                public void LogDataPacketInfo(DataPacketStruct packet, string filename)
                 {
-                    // Write packet info in a structured format
-                    outputFile.WriteLine("Source address: " + packet.sourceAddress);
-                    outputFile.WriteLine("Sequence number: " + packet.sequenceNumber);
-                    outputFile.WriteLine("Timestamp: " + packet.timeStamp);
-                    outputFile.WriteLine("Data type: " + packet.dataType);
-                    outputFile.WriteLine("Data: " + packet.packetData);
+                    using (StreamWriter outputFile = new StreamWriter(filename, true))
+                    {
+                        // Write packet info in a structured format
+                        outputFile.WriteLine("Source address: " + packet.sourceAddress);
+                        outputFile.WriteLine("Sequence number: " + packet.sequenceNumber);
+                        outputFile.WriteLine("Timestamp: " + packet.timeStamp);
+                        outputFile.WriteLine("Data type: " + packet.dataType);
+                        outputFile.WriteLine("Data: " + packet.packetData);
+                    }
+                }
+
+                // Function to serialize a data packet
+                public static string SerializeDataPacketStruct(DataPacketStruct packet)
+                {
+                    return JsonConvert.SerializeObject(packet);
+                }
+
+                // Function to deserialize a data packet
+                public static DataPacketStruct DeserializeDataPacketStruct(string json)
+                {
+                    return JsonConvert.DeserializeObject<DataPacketStruct>(json);
+                }
+
+
+                // Convert images to string (for packet data)
+                public static string EncodeImageToString(byte[] imageData)
+                {
+                    // Convert byte array to Base64 string
+                    string base64String = Convert.ToBase64String(imageData);
+                    return base64String;
+                }
+
+                // Convert images from string back to byte array  
+                public static void DecodeAndWriteImageToFile(string base64StringImage, string outputPath)
+                {
+                    // Convert Base64 string to byte array
+                    byte[] imageData = Convert.FromBase64String(base64StringImage);
+
+                    // Write the image byte array to a file
+                    File.WriteAllBytes(outputPath, imageData);
+                }
+
+                // Convert 
+                public static void ProcessDataPacket(DataPacketStruct receivedPacket)
+                {
+                    if (receivedPacket.dataType == "image") // Decode and write package image to local path 
+                    {
+                        string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
+                        string encodedPacketImage = receivedPacket.packetData; // Get encoded image from packet 
+
+                        DecodeAndWriteImageToFile(encodedPacketImage, imagePath); // Decode received image and write to file
+                    }
+                    if (receivedPacket.dataType == "text/plain")
+                    {
+                        // Process text
+                        string textPath = GetUniqueImagePath();
+                        PacketManipulation textLogger = new PacketManipulation();
+                        textLogger.LogDataPacketInfo(receivedPacket, textPath);
+                    }
+                }
+
+                // Function to generate a unique image path (based on date/time)
+                public static string GetUniqueImagePath()
+                {
+                    string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
+                    string imagePath = Path.Combine(Environment.CurrentDirectory, fileName);
+                    return imagePath;
+                }
+                // Function to generate a unique log path (based on date/time)
+                public static string GetUniqueLogPath()
+                {
+                    string fileName = "Packet Log - " + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
+                    string logPath = Path.Combine(Environment.CurrentDirectory, fileName);
+                    return logPath;
                 }
             }
 
-            // Function to serialize a data packet
-            public static string SerializeDataPacketStruct(DataPacketStruct packet)
+            // Class contains networking-related packet functions 
+            public class DataPacketTcpSocket
             {
-                return JsonConvert.SerializeObject(packet);
-            }
+                private readonly int port; // Port to connect to 
+                private readonly string ipAddress; // IP address of the server 
 
-            // Function to deserialize a data packet
-            public static DataPacketStruct DeserializeDataPacketStruct(string json)
-            {
-                return JsonConvert.DeserializeObject<DataPacketStruct>(json);
-            }
-
-
-            // Convert images to string (for packet data)
-            public static string EncodeImageToString(byte[] imageData)
-            {
-                // Convert byte array to Base64 string
-                string base64String = Convert.ToBase64String(imageData);
-                return base64String;
-            }
-
-            // Convert images from string back to byte array  
-            public static void DecodeAndWriteImageToFile(string base64StringImage, string outputPath)
-            {
-                // Convert Base64 string to byte array
-                byte[] imageData = Convert.FromBase64String(base64StringImage);
-
-                // Write the image byte array to a file
-                File.WriteAllBytes(outputPath, imageData);
-            }
-
-            // Convert 
-            public static void ProcessDataPacket(DataPacketStruct receivedPacket)
-            {
-                if (receivedPacket.dataType == "image") // Decode and write package image to local path 
+                public DataPacketTcpSocket(string ipAddress, int port) // Constructor 
                 {
-                    string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
-                    string encodedPacketImage = receivedPacket.packetData; // Get encoded image from packet 
-
-                    DecodeAndWriteImageToFile(encodedPacketImage, imagePath); // Decode received image and write to file
+                    this.ipAddress = ipAddress;
+                    this.port = port;
                 }
-                if (receivedPacket.dataType == "text/plain")
+
+                // Method to send a data packet 
+                public bool SendDataPacket(DataPacket.DataPacketStruct packet)
                 {
-                    // Process text
-                    string textPath = GetUniqueImagePath();
-                    PacketManipulation textLogger = new PacketManipulation();
-                    textLogger.LogDataPacketInfo(receivedPacket, textPath);
+                    try
+                    {
+                        // Connect to the server using TCP
+                        TcpClient client = new TcpClient(ipAddress, port);
+                        NetworkStream stream = client.GetStream();
+
+                        // Serialize packet to json string
+                        string jsonString = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+
+                        // Convert json string to byte array
+                        byte[] data = Encoding.ASCII.GetBytes(jsonString);
+
+                        // Send packet to server
+                        stream.Write(data, 0, data.Length);
+
+                        // Close connections
+                        stream.Close();
+                        client.Close();
+
+                        return true; // Return true if successful
+                    }
+                    catch (SocketException)
+                    {
+                        return false;  // Return false if failed to send data packet
+                    }
                 }
-            }
 
-            // Function to generate a unique image path (based on date/time)
-            public static string GetUniqueImagePath()
-            {
-                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
-                string imagePath = Path.Combine(Environment.CurrentDirectory, fileName);
-                return imagePath;
-            }
-            // Function to generate a unique log path (based on date/time)
-            public static string GetUniqueLogPath()
-            {
-                string fileName = "Packet Log - " + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt";
-                string logPath = Path.Combine(Environment.CurrentDirectory, fileName);
-                return logPath;
-            }
-        }
-
-        // Class contains networking-related packet functions 
-        public class DataPacketTcpSocket
-        {
-            private readonly int port; // Port to connect to 
-            private readonly string ipAddress; // IP address of the server 
-
-            public DataPacketTcpSocket(string ipAddress, int port) // Constructor 
-            {
-                this.ipAddress = ipAddress;
-                this.port = port;
-            }
-
-            // Method to send a data packet 
-            public bool SendDataPacket(DataPacket.DataPacketStruct packet)
-            {
-                try
+                public DataPacket.DataPacketStruct ReceiveDataPacket()
                 {
-                    // Connect to the server using TCP
-                    TcpClient client = new TcpClient(ipAddress, port);
-                    NetworkStream stream = client.GetStream();
+                    try
+                    {
+                        // Start listening for incoming connections
+                        TcpListener listener = new TcpListener(IPAddress.Any, port);
+                        listener.Start();
 
-                    // Serialize packet to json string
-                    string jsonString = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                        // Accept incoming connection
+                        TcpClient client = listener.AcceptTcpClient();
+                        NetworkStream stream = client.GetStream();
 
-                    // Convert json string to byte array
-                    byte[] data = Encoding.ASCII.GetBytes(jsonString);
+                        // Read data from the stream
+                        byte[] data = new byte[client.ReceiveBufferSize];
+                        int bytesRead = stream.Read(data, 0, client.ReceiveBufferSize);
 
-                    // Send packet to server
-                    stream.Write(data, 0, data.Length);
+                        // Convert received byte array to json string
+                        string jsonString = Encoding.ASCII.GetString(data, 0, bytesRead);
 
-                    // Close connections
-                    stream.Close();
-                    client.Close();
+                        // Deserialize json string to packet object
+                        DataPacket.DataPacketStruct packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(jsonString);
 
-                    return true; // Return true if successful
-                }
-                catch (SocketException)
-                {
-                    return false;  // Return false if failed to send data packet
-                }
-            }
+                        // Close connections
+                        stream.Close();
+                        client.Close();
+                        listener.Stop();
 
-            public DataPacket.DataPacketStruct ReceiveDataPacket()
-            {
-                try
-                {
-                    // Start listening for incoming connections
-                    TcpListener listener = new TcpListener(IPAddress.Any, port);
-                    listener.Start();
-
-                    // Accept incoming connection
-                    TcpClient client = listener.AcceptTcpClient();
-                    NetworkStream stream = client.GetStream();
-
-                    // Read data from the stream
-                    byte[] data = new byte[client.ReceiveBufferSize];
-                    int bytesRead = stream.Read(data, 0, client.ReceiveBufferSize);
-
-                    // Convert received byte array to json string
-                    string jsonString = Encoding.ASCII.GetString(data, 0, bytesRead);
-
-                    // Deserialize json string to packet object
-                    DataPacket.DataPacketStruct packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(jsonString);
-
-                    // Close connections
-                    stream.Close();
-                    client.Close();
-                    listener.Stop();
-
-                    // Return the received data packet
-                    return packet;
-                }
-                catch (SocketException)
-                {
-                    return null; // Return null if failed to receive data packet
+                        // Return the received data packet
+                        return packet;
+                    }
+                    catch (SocketException)
+                    {
+                        return null; // Return null if failed to receive data packet
+                    }
                 }
             }
         }

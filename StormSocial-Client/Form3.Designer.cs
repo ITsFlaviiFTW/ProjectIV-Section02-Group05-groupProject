@@ -57,6 +57,7 @@
             this.confirmChatButton.TabIndex = 2;
             this.confirmChatButton.Text = "Chat!";
             this.confirmChatButton.UseVisualStyleBackColor = true;
+            this.confirmChatButton.Click += new System.EventHandler(this.confirmChatButton_Click);
             // 
             // Form3
             // 
