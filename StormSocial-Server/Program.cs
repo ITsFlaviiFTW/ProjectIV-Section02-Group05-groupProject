@@ -81,12 +81,15 @@ namespace SimpleClientServer
 
                         if (isLastPacket)
                         {
-                            string imagePath = DataPacket.PacketManipulation.GetUniqueImagePath();
-                            string base64StringImage = imageDataBuilder.ToString();
-                            DataPacket.PacketManipulation.DecodeAndWriteImageToFile(base64StringImage, imagePath);
-                            imageDataBuilder.Clear();
+                            DataPacket.PacketManipulation.ProcessDataPacket(packet);
                         }
                     }
+                    if (currentDataType == "text/plain")
+                    {
+                        DataPacket.PacketManipulation.ProcessDataPacket(packet);
+                    }
+
+
 
                     // Print information for each received packet
                     Console.WriteLine($"Packet Received from {packet.GetSourceAddress()}");
