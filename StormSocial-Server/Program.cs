@@ -35,11 +35,12 @@ namespace SimpleClientServer
         static async Task HandleClientAsync(Socket clientSocket)
         {
             var stateMachine = new StateMachine();
+            var buffer = new byte[10000000];
 
             // Receive and process data from the client in a loop
             while (clientSocket.Connected)
             {
-                var buffer = new byte[1024];
+                var receivedData = "";
                 var bytesRead = await clientSocket.ReceiveAsync(buffer, SocketFlags.None);
                 if (bytesRead == 0)
                 {
@@ -48,17 +49,27 @@ namespace SimpleClientServer
                     break;
                 }
 
-                // Deserialize the received data packet
-                var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(Encoding.ASCII.GetString(buffer));
-                DataPacket.PacketManipulation.ProcessDataPacket(packet);
+                // Convert the received bytes to a string and concatenate it with the previously received data
+                receivedData += Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                Console.WriteLine("Message Received from " + packet.GetSourceAddress() + ": " + packet.GetPacketData());
-
+                
+                // Extract the complete message and process it
+                try
+                {
+                    var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(receivedData);
+                    DataPacket.PacketManipulation.ProcessDataPacket(packet);
+                    Console.WriteLine("Message Received from " + packet.GetSourceAddress() + ": " + packet.GetPacketData());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred while processing the message: {ex.Message}");
+                }
             }
 
             // Clean up the client socket
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
         }
+
     }
 }

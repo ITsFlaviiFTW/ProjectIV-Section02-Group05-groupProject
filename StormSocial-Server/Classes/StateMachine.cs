@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Collections.Generic;
-using System.Net.Sockets;
 
 namespace StormSocial_Server.Classes
 {
@@ -113,7 +112,7 @@ namespace StormSocial_Server.Classes
         {
             // Store the socket and buffer in fields
             public readonly Socket Socket;
-            public readonly byte[] Buffer = new byte[1024];
+            public readonly byte[] Buffer = new byte[10000000];
 
             public ClientConnection(Socket clientSocket, StateMachine stateMachine)
             {
