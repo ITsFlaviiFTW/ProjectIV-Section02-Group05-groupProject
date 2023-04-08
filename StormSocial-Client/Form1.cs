@@ -1,5 +1,6 @@
 using SimpleClientServer;
 using StormSocial_Server.Classes;
+using System.Text;
 
 namespace StormSocial_Client
 {
@@ -35,18 +36,24 @@ namespace StormSocial_Client
                 Program.loggedInClients.Add(clientSocketAddress, login);
                 string email = EmailLoginText.Text;
                 var emailPacket = new DataPacket.DataPacketStruct(1, "text/plain", Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail(), 0);
-                
+
+                // Serialize the emailPacket to JSON
                 var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(emailPacket);
+
+                // Send the serialized emailPacket to the server
+                byte[] data = Encoding.ASCII.GetBytes(json);
+                Program.clientSocket.Send(data);
+
                 Form3 Form3 = new Form3();
                 Form3.Show();
                 this.Hide();
-                
             }
             else
             {
                 SystemLabel.Text = "Invalid login credentials. Please try again.";
             }
         }
+
 
 
         private void SloganPanel_Paint(object sender, PaintEventArgs e)

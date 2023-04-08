@@ -53,30 +53,17 @@ namespace SimpleClientServer
                 // Convert the received bytes to a string and concatenate it with the previously received data
                 receivedData += Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-                
+
                 // Extract the complete message and process it
                 try
                 {
                     var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(receivedData);
                     DataPacket.PacketManipulation.ProcessDataPacket(packet);
-                    Console.WriteLine("Message Received from " + packet.GetSourceAddress() + ": " + packet.GetPacketData());
+                    Console.WriteLine("Message Received from " + packet.GetEmail() + packet.GetSourceAddress() + ": " + packet.GetPacketData());
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"An error occurred while processing the message: {ex.Message}");
-                }
-                // Deserialize the received data packet
-                var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(Encoding.ASCII.GetString(buffer));
-                DataPacket.PacketManipulation.ProcessDataPacket(packet);
-
-                Console.WriteLine("Message Received from " + packet.GetSourceAddress() + ": " + packet.GetPacketData());
-
-                // Update the email-to-socket address map after successful authentication
-                // Replace "email" with the actual email field in the packet
-                string email = packet.GetEmail();
-                if (!string.IsNullOrEmpty(email))
-                {
-                    emailToSocketAddressMap[email] = clientSocket.RemoteEndPoint.ToString();
                 }
             }
 
@@ -86,6 +73,5 @@ namespace SimpleClientServer
         }
 
 
-       
     }
 }
