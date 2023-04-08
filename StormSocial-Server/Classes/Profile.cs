@@ -61,7 +61,7 @@ namespace StormSocial_Server.Classes
         }
         private void setContacts()
         {
-            this.contacts.populateContactsFromFile(this.GetLogin().getEmail());
+            //this.contacts.populateContactsFromFile(this.GetLogin().getEmail());
         }
     }
 }

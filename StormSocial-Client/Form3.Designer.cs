@@ -31,6 +31,7 @@
             this.chatLabel = new System.Windows.Forms.Label();
             this.chatTextBox = new System.Windows.Forms.TextBox();
             this.confirmChatButton = new System.Windows.Forms.Button();
+            this.errorLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // chatLabel
@@ -57,12 +58,22 @@
             this.confirmChatButton.TabIndex = 2;
             this.confirmChatButton.Text = "Chat!";
             this.confirmChatButton.UseVisualStyleBackColor = true;
+            this.confirmChatButton.Click += new System.EventHandler(this.confirmChatButton_Click);
+            // 
+            // errorLabel
+            // 
+            this.errorLabel.AutoSize = true;
+            this.errorLabel.Location = new System.Drawing.Point(262, 280);
+            this.errorLabel.Name = "errorLabel";
+            this.errorLabel.Size = new System.Drawing.Size(0, 15);
+            this.errorLabel.TabIndex = 3;
             // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(636, 382);
+            this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.confirmChatButton);
             this.Controls.Add(this.chatTextBox);
             this.Controls.Add(this.chatLabel);
@@ -78,5 +89,6 @@
         private Label chatLabel;
         private TextBox chatTextBox;
         private Button confirmChatButton;
+        private Label errorLabel;
     }
 }

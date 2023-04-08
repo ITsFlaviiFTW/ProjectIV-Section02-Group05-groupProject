@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,8 +18,9 @@ namespace StormSocial_Server.Classes
     {
         private string email;
         private string password;
+        private string clientSocketAddress;
 
-        private bool checkForExistingEmailInFile(string email)
+        public bool checkForExistingEmailInFile(string email)
         {
             string fileName = "profiles.txt";
 
@@ -54,11 +55,20 @@ namespace StormSocial_Server.Classes
             this.password = password;
         }
 
+        public Login(string email, string password, string clientSocketAddress)
+        {
+            this.email = email;
+            this.password = password;
+            this.clientSocketAddress = clientSocketAddress;
+        }
+
         //Setters and getters
         public string getEmail() { return this.email; }
         public string getPassword() { return this.password; }
         public void setEmail(string email) { this.email = email; }
         public void setPassword(string password) { this.password = password; }
+        public string getClientSocketAddress() { return this.clientSocketAddress; }
+        public void setClientSocketAddress(string clientSocketAddress) { this.clientSocketAddress = clientSocketAddress; }
 
 
         public int randomCode()

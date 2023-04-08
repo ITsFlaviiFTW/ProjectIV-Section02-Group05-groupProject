@@ -1,3 +1,4 @@
+using SimpleClientServer;
 using StormSocial_Server.Classes;
 
 namespace StormSocial_Client
@@ -21,19 +22,32 @@ namespace StormSocial_Client
         {
             string LoginEmail = EmailLoginText.Text;
             string LoginPass = PasswordLoginText.Text;
-            Login login = new Login(LoginEmail, LoginPass);
 
-            if(login.userLogIn(LoginEmail, LoginPass) == true ) {
-                Form2 Form2 = new Form2();
-                Form2.Show();
+            // Retrieve the client's socket address
+            string clientSocketAddress = Program.clientSocket.RemoteEndPoint.ToString();
+
+            // Include the client's socket address when creating the Login object
+            Login login = new Login(LoginEmail, LoginPass, clientSocketAddress);
+
+            if (login.userLogIn(LoginEmail, LoginPass) == true)
+            {
+                // Add the login object to the loggedInClients dictionary
+                Program.loggedInClients.Add(clientSocketAddress, login);
+                string email = EmailLoginText.Text;
+                var emailPacket = new DataPacket.DataPacketStruct(1, "text/plain", Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail(), 0);
+                
+                var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(emailPacket);
+                Form3 Form3 = new Form3();
+                Form3.Show();
                 this.Hide();
+                
             }
             else
             {
                 SystemLabel.Text = "Invalid login credentials. Please try again.";
             }
-
         }
+
 
         private void SloganPanel_Paint(object sender, PaintEventArgs e)
         {
