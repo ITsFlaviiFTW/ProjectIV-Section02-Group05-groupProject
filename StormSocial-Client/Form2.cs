@@ -55,7 +55,14 @@ namespace StormSocial_Client
             string userEmail = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
 
             // Send the data packet 
-            var packet = new DataPacket.DataPacketStruct(1, "text/plain", userMessage, 0);
+            var packet = new DataPacket.DataPacketStruct
+            {
+                sequenceNumber = 1,
+                dataType = "text/plain",
+                packetData = userMessage,
+                checksum = 0
+            };
+
             var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
             var JSONbytes = Encoding.ASCII.GetBytes(json);
 
@@ -105,7 +112,15 @@ namespace StormSocial_Client
 
                     // Use the encodedImageData to send a packet 
                     // Create the data packet
-                    var packet = new DataPacket.DataPacketStruct(1, "image", encodedImageData, 0);
+                    var packet = new DataPacket.DataPacketStruct
+                    {
+                        sequenceNumber = 1,
+                        dataType = "image",
+                        packetData = encodedImageData,
+                        checksum = 0
+                    };
+
+                    // Send the data packet 
                     var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
                     var JSONbytes = Encoding.ASCII.GetBytes(json);
                     Program.clientSocket.Send(JSONbytes);

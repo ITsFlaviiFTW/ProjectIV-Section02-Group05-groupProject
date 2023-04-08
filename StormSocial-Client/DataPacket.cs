@@ -24,6 +24,19 @@ namespace StormSocial_Server.Classes
             public string dataType; // Type of data
             public string packetData; // Actual packet data
             public uint checksum; // Checksum
+            public int totalPackets; // Total number of packets
+            public int packetIndex; // Packet index
+            public string email;
+            public DataPacketStruct(string email)
+            {
+                this.email = email;
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sequenceNumber = 0;
+                this.timeStamp = DateTime.Now.ToString();
+                this.dataType = "text/plain";
+                this.packetData = "defaultString";
+                this.checksum = CalculateChecksum();
+            }
 
             // Constructor to initialize the packet 
             public DataPacketStruct()
@@ -33,12 +46,13 @@ namespace StormSocial_Server.Classes
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = "text/plain";
                 this.packetData = "defaultString";
-                this.checksum = CalculateChecksum();  
+                this.checksum = CalculateChecksum();
             }
 
             // Constructor to initialize the packet with parameters
-            public DataPacketStruct(int sequenceNumber, string dataType, string data, uint checksum)
+            public DataPacketStruct(string email, int sequenceNumber, string dataType, string data, uint checksum)
             {
+                this.email = email;
                 this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
                 this.sequenceNumber = sequenceNumber;
                 this.timeStamp = DateTime.Now.ToString();
@@ -57,6 +71,11 @@ namespace StormSocial_Server.Classes
                     byte[] hash = crc32.ComputeHash(data);
                     return BitConverter.ToUInt32(hash, 0);
                 }
+            }
+
+            public string GetEmail()
+            {
+                return email;
             }
 
             // Getter methods for the public fields
@@ -151,7 +170,7 @@ namespace StormSocial_Server.Classes
                 if (receivedPacket.dataType == "text/plain")
                 {
                     // Process text
-                    string textPath = GetUniqueImagePath();
+                    string textPath = GetUniqueLogPath();
                     PacketManipulation textLogger = new PacketManipulation();
                     textLogger.LogDataPacketInfo(receivedPacket, textPath);
                 }
@@ -160,7 +179,7 @@ namespace StormSocial_Server.Classes
             // Function to generate a unique image path (based on date/time)
             public static string GetUniqueImagePath()
             {
-                string fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
+                string fileName = "Packet Log - " + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".jpg";
                 string imagePath = Path.Combine(Environment.CurrentDirectory, fileName);
                 return imagePath;
             }
@@ -226,6 +245,7 @@ namespace StormSocial_Server.Classes
                     // Accept incoming connection
                     TcpClient client = listener.AcceptTcpClient();
                     NetworkStream stream = client.GetStream();
+                    string clientSocketAddress = client.Client.RemoteEndPoint.ToString();
 
                     // Read data from the stream
                     byte[] data = new byte[client.ReceiveBufferSize];
