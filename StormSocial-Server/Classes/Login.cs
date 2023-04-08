@@ -14,7 +14,7 @@ using ElasticEmail.Model;
 
 namespace StormSocial_Server.Classes
 {
-    internal class Login
+    public class Login
     {
         private string email;
         private string password;
@@ -107,6 +107,7 @@ namespace StormSocial_Server.Classes
                     this.setPassword(password);
                     Profile profile = new Profile(firstName, lastName, this);
                     profile.saveProfileToFile();
+                    
                 }
                 else
                 {

@@ -109,5 +109,10 @@ namespace StormSocial_Client
             }
 
         }
+
+        private void Contact1Button_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

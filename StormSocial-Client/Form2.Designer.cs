@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.ContactsPanel = new System.Windows.Forms.Panel();
             this.Contact4Button = new System.Windows.Forms.Button();
             this.Contact3Button = new System.Windows.Forms.Button();
@@ -36,13 +35,13 @@
             this.Contact1Button = new System.Windows.Forms.Button();
             this.ContactsLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.BrowsePhotosButton = new System.Windows.Forms.Button();
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.SendButton = new System.Windows.Forms.Button();
             this.MessageTextBox = new System.Windows.Forms.TextBox();
             this.IncomingText = new System.Windows.Forms.TextBox();
             this.OutgoingText = new System.Windows.Forms.TextBox();
             this.CurrentChatName = new System.Windows.Forms.Label();
-            this.BrowsePhotosButton = new System.Windows.Forms.Button();
             this.ContactsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -67,6 +66,7 @@
             this.Contact4Button.Size = new System.Drawing.Size(171, 23);
             this.Contact4Button.TabIndex = 4;
             this.Contact4Button.UseVisualStyleBackColor = true;
+            this.Contact4Button.Visible = false;
             // 
             // Contact3Button
             // 
@@ -75,6 +75,7 @@
             this.Contact3Button.Size = new System.Drawing.Size(171, 23);
             this.Contact3Button.TabIndex = 3;
             this.Contact3Button.UseVisualStyleBackColor = true;
+            this.Contact3Button.Visible = false;
             // 
             // Contact2Button
             // 
@@ -83,6 +84,7 @@
             this.Contact2Button.Size = new System.Drawing.Size(171, 23);
             this.Contact2Button.TabIndex = 2;
             this.Contact2Button.UseVisualStyleBackColor = true;
+            this.Contact2Button.Visible = false;
             // 
             // Contact1Button
             // 
@@ -91,6 +93,8 @@
             this.Contact1Button.Size = new System.Drawing.Size(171, 23);
             this.Contact1Button.TabIndex = 1;
             this.Contact1Button.UseVisualStyleBackColor = true;
+            this.Contact1Button.Visible = false;
+            this.Contact1Button.Click += new System.EventHandler(this.Contact1Button_Click);
             // 
             // ContactsLabel
             // 
@@ -116,6 +120,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(893, 542);
             this.panel1.TabIndex = 1;
+            // 
+            // BrowsePhotosButton
+            // 
+            this.BrowsePhotosButton.Location = new System.Drawing.Point(754, 497);
+            this.BrowsePhotosButton.Name = "BrowsePhotosButton";
+            this.BrowsePhotosButton.Size = new System.Drawing.Size(28, 27);
+            this.BrowsePhotosButton.TabIndex = 6;
+            this.BrowsePhotosButton.Text = "...";
+            this.BrowsePhotosButton.UseVisualStyleBackColor = true;
+            this.BrowsePhotosButton.Click += new System.EventHandler(this.BrowsePhotosButton_Click);
             // 
             // vScrollBar1
             // 
@@ -169,12 +183,13 @@
             this.CurrentChatName.Location = new System.Drawing.Point(16, 15);
             this.CurrentChatName.Name = "CurrentChatName";
             this.CurrentChatName.TabIndex = 0;
+            this.CurrentChatName.Text = "Storm Chat v1.0";
+            // 
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1123, 566);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.ContactsPanel);
