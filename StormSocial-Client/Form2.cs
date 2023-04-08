@@ -46,14 +46,16 @@ namespace StormSocial_Client
         {
             string userMessage = MessageTextBox.Text;
 
-            // Create the data packet
+            // Send the data packet 
             var packet = new DataPacket.DataPacketStruct(1, "text/plain", userMessage, 0);
             var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
             var JSONbytes = Encoding.ASCII.GetBytes(json);
 
+            // Send the packet 
 
             // Send the data packet
             Program.clientSocket.Send(JSONbytes);
+
 
             OutgoingText.AppendText(userMessage + Environment.NewLine);
         }
@@ -96,9 +98,11 @@ namespace StormSocial_Client
 
                     // Use the encodedImageData to send a packet 
                     // Create the data packet
+                    // Send the data packet
                     var packet = new DataPacket.DataPacketStruct(1, "image", encodedImageData, 0);
                     var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
                     var JSONbytes = Encoding.ASCII.GetBytes(json);
+                    Program.clientSocket.Send(JSONbytes);
 
                     // Send the data packet
                     Program.clientSocket.Send(JSONbytes);
