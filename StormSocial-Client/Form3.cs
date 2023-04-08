@@ -25,8 +25,9 @@ namespace StormSocial_Client
             email.setEmail(existingEmail);
             if (email.checkForExistingEmailInFile(existingEmail) == true)
             {
-                Form2 Form2 = new Form2();
-                Form2.Show();
+                Form2 form2 = new Form2();
+                form2.ContactEmail = existingEmail; // Set the ContactEmail property
+                form2.Show();
                 this.Hide();
             }
             else
@@ -34,5 +35,6 @@ namespace StormSocial_Client
                 errorLabel.Text = "Email does not exist. Please try again.";
             }
         }
+
     }
 }

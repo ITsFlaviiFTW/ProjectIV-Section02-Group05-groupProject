@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.ContactsPanel = new System.Windows.Forms.Panel();
+            this.differentChatButton = new System.Windows.Forms.Button();
             this.Contact4Button = new System.Windows.Forms.Button();
             this.Contact3Button = new System.Windows.Forms.Button();
             this.Contact2Button = new System.Windows.Forms.Button();
@@ -42,14 +43,16 @@
             this.IncomingText = new System.Windows.Forms.TextBox();
             this.OutgoingText = new System.Windows.Forms.TextBox();
             this.CurrentChatName = new System.Windows.Forms.Label();
-            this.differentChatButton = new System.Windows.Forms.Button();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
             this.ContactsPanel.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // ContactsPanel
             // 
             this.ContactsPanel.BackColor = System.Drawing.Color.White;
+            this.ContactsPanel.Controls.Add(this.pictureBox);
             this.ContactsPanel.Controls.Add(this.differentChatButton);
             this.ContactsPanel.Controls.Add(this.Contact4Button);
             this.ContactsPanel.Controls.Add(this.Contact3Button);
@@ -60,6 +63,16 @@
             this.ContactsPanel.Name = "ContactsPanel";
             this.ContactsPanel.Size = new System.Drawing.Size(200, 542);
             this.ContactsPanel.TabIndex = 0;
+            // 
+            // differentChatButton
+            // 
+            this.differentChatButton.Location = new System.Drawing.Point(29, 497);
+            this.differentChatButton.Name = "differentChatButton";
+            this.differentChatButton.Size = new System.Drawing.Size(157, 23);
+            this.differentChatButton.TabIndex = 5;
+            this.differentChatButton.Text = "Chat With Someone Else!";
+            this.differentChatButton.UseVisualStyleBackColor = true;
+            this.differentChatButton.Click += new System.EventHandler(this.differentChatButton_Click);
             // 
             // Contact4Button
             // 
@@ -186,15 +199,13 @@
             this.CurrentChatName.TabIndex = 0;
             this.CurrentChatName.Text = "Storm Chat v1.0";
             // 
-            // differentChatButton
+            // pictureBox
             // 
-            this.differentChatButton.Location = new System.Drawing.Point(29, 497);
-            this.differentChatButton.Name = "differentChatButton";
-            this.differentChatButton.Size = new System.Drawing.Size(157, 23);
-            this.differentChatButton.TabIndex = 5;
-            this.differentChatButton.Text = "Chat With Someone Else!";
-            this.differentChatButton.UseVisualStyleBackColor = true;
-            this.differentChatButton.Click += new System.EventHandler(this.differentChatButton_Click);
+            this.pictureBox.Location = new System.Drawing.Point(15, 256);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(171, 142);
+            this.pictureBox.TabIndex = 6;
+            this.pictureBox.TabStop = false;
             // 
             // Form2
             // 
@@ -210,6 +221,7 @@
             this.ContactsPanel.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -231,5 +243,6 @@
         private Label CurrentChatName;
         private Button BrowsePhotosButton;
         private Button differentChatButton;
+        private PictureBox pictureBox;
     }
 }
