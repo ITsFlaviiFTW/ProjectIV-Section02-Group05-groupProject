@@ -12,12 +12,14 @@ namespace StormSocial_Server.Classes
         private string firstName;
         private string lastName;
         Login log_in;
+        Contacts contacts;
 
         public Profile(string firstName, string lastName, Login log_in)
         {
             this.firstName = firstName;
             this.lastName = lastName;
             this.log_in = log_in;
+            this.setContacts();
         }
         public Profile()
         {
@@ -25,6 +27,7 @@ namespace StormSocial_Server.Classes
             this.log_in.setPassword(string.Empty);
             this.firstName = string.Empty;
             this.lastName = string.Empty;
+            this.setContacts();
         }
         public void setFirstName(string firstName) { this.firstName = firstName; }
         public void setLastName(string lastName) {  this.lastName = lastName; }
@@ -49,6 +52,10 @@ namespace StormSocial_Server.Classes
                 using (FileStream stream = File.Create(fileName)); //create new file if one does not exist
                 saveProfileToFile(); // re-call the function to save the info
             }
+        }
+        private void setContacts()
+        {
+            this.contacts.populateContactsFromFile(this.GetLogin().getEmail());
         }
     }
 }
