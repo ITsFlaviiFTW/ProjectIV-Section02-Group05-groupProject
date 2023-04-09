@@ -46,6 +46,8 @@
             IncomingText = new TextBox();
             OutgoingText = new TextBox();
             CurrentChatName = new Label();
+            ChatLabel = new Label();
+            currentContact = new Label();
             ContactsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox).BeginInit();
             panel1.SuspendLayout();
@@ -61,6 +63,7 @@
             ContactsPanel.Controls.Add(Contact2Button);
             ContactsPanel.Controls.Add(Contact1Button);
             ContactsPanel.Controls.Add(ContactsLabel);
+            ContactsPanel.Controls.Add(CurrentChatName);
             ContactsPanel.Location = new Point(12, 12);
             ContactsPanel.Name = "ContactsPanel";
             ContactsPanel.Size = new Size(200, 542);
@@ -92,6 +95,7 @@
             Contact4Button.TabIndex = 4;
             Contact4Button.UseVisualStyleBackColor = true;
             Contact4Button.Visible = false;
+            Contact4Button.Click += Contact4Button_Click;
             // 
             // Contact3Button
             // 
@@ -101,6 +105,7 @@
             Contact3Button.TabIndex = 3;
             Contact3Button.UseVisualStyleBackColor = true;
             Contact3Button.Visible = false;
+            Contact3Button.Click += Contact3Button_Click;
             // 
             // Contact2Button
             // 
@@ -110,6 +115,7 @@
             Contact2Button.TabIndex = 2;
             Contact2Button.UseVisualStyleBackColor = true;
             Contact2Button.Visible = false;
+            Contact2Button.Click += Contact2Button_Click;
             // 
             // Contact1Button
             // 
@@ -134,6 +140,8 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(currentContact);
+            panel1.Controls.Add(ChatLabel);
             panel1.Controls.Add(currentlyLoggedInAs);
             panel1.Controls.Add(currentUser);
             panel1.Controls.Add(BrowsePhotosButton);
@@ -142,7 +150,6 @@
             panel1.Controls.Add(MessageTextBox);
             panel1.Controls.Add(IncomingText);
             panel1.Controls.Add(OutgoingText);
-            panel1.Controls.Add(CurrentChatName);
             panel1.Location = new Point(218, 12);
             panel1.Name = "panel1";
             panel1.Size = new Size(893, 542);
@@ -151,7 +158,7 @@
             // currentlyLoggedInAs
             // 
             currentlyLoggedInAs.AutoSize = true;
-            currentlyLoggedInAs.Location = new Point(293, 15);
+            currentlyLoggedInAs.Location = new Point(433, 15);
             currentlyLoggedInAs.Name = "currentlyLoggedInAs";
             currentlyLoggedInAs.Size = new Size(134, 15);
             currentlyLoggedInAs.TabIndex = 8;
@@ -160,7 +167,7 @@
             // currentUser
             // 
             currentUser.AutoSize = true;
-            currentUser.Location = new Point(433, 15);
+            currentUser.Location = new Point(573, 15);
             currentUser.Name = "currentUser";
             currentUser.Size = new Size(0, 15);
             currentUser.TabIndex = 7;
@@ -222,11 +229,28 @@
             // CurrentChatName
             // 
             CurrentChatName.AutoSize = true;
-            CurrentChatName.Location = new Point(16, 15);
+            CurrentChatName.Location = new Point(3, -3);
             CurrentChatName.Name = "CurrentChatName";
             CurrentChatName.Size = new Size(91, 15);
             CurrentChatName.TabIndex = 0;
             CurrentChatName.Text = "Storm Chat v1.0";
+            // 
+            // ChatLabel
+            // 
+            ChatLabel.AutoSize = true;
+            ChatLabel.Location = new Point(3, 15);
+            ChatLabel.Name = "ChatLabel";
+            ChatLabel.Size = new Size(87, 15);
+            ChatLabel.TabIndex = 7;
+            ChatLabel.Text = "Chatting With: ";
+            // 
+            // currentContact
+            // 
+            currentContact.AutoSize = true;
+            currentContact.Location = new Point(96, 15);
+            currentContact.Name = "currentContact";
+            currentContact.Size = new Size(0, 15);
+            currentContact.TabIndex = 9;
             // 
             // Form2
             // 
@@ -266,5 +290,7 @@
         private PictureBox pictureBox;
         private Label currentUser;
         private Label currentlyLoggedInAs;
+        private Label currentContact;
+        private Label ChatLabel;
     }
 }

@@ -51,7 +51,11 @@ namespace StormSocial_Client
             buttonArray[2] = Contact3Button;
             buttonArray[3] = Contact4Button;
 
-            if(profile.GetContacts().getContacts().Count > 0)
+            for (int i = 0; i < buttonArray.Length; i++)
+            {
+                buttonArray[i].Visible = false;
+            }
+            if (profile.GetContacts().getContacts().Count > 0)
             {
                 for (int i = 0; i < profile.GetContacts().getContacts().Count; i++)
                 {
@@ -59,7 +63,7 @@ namespace StormSocial_Client
                     buttonArray[i].Visible = true;
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(ContactEmail))
             {
                 //Contact1Button.Visible = true;
@@ -160,16 +164,32 @@ namespace StormSocial_Client
 
 
 
-        private void Contact1Button_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void differentChatButton_Click(object sender, EventArgs e)
         {
             Form3 form3 = new Form3(currentUser.Text);
             form3.Show();
             this.Hide();
+        }
+        private void Contact1Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact1Button.Text;
+        }
+
+        private void Contact2Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact2Button.Text;
+        }
+
+        private void Contact3Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact3Button.Text;
+        }
+
+        private void Contact4Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact4Button.Text;
         }
     }
 }
