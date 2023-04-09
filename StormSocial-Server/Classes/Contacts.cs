@@ -30,7 +30,7 @@ namespace StormSocial_Server.Classes
 
             if(File.Exists(fileName))
             {
-                using (StreamWriter sw = new StreamWriter(fileName, true))
+                using (StreamWriter sw = new StreamWriter(fileName))
                 {
                     for (int i = 0; i < this.contacts.Count; i++)
                     {
