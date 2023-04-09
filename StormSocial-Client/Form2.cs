@@ -81,6 +81,7 @@ namespace StormSocial_Client
             // Create the data packet
             var packet = new DataPacket.DataPacketStruct
             {
+                email = userEmail,
                 sequenceNumber = 1,
                 dataType = "text/plain",
                 packetData = userMessage,
