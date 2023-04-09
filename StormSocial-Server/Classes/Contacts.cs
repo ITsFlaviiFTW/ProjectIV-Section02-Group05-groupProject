@@ -7,13 +7,20 @@ using System.Threading.Tasks;
 
 namespace StormSocial_Server.Classes
 {
-    internal class Contacts
+    public class Contacts
     {
         private List <string> contacts;
 
+        public Contacts(string email)
+        {
+            this.contacts = populateContactsFromFile(email);
+            
+        }
+        public List<string> getContacts() { return this.contacts; }
         public void addNewContact(string email)
         {
             this.contacts.Add(email);
+            //this.writeContactToFile(email);
         }
 
 
@@ -37,8 +44,9 @@ namespace StormSocial_Server.Classes
                 writeContactToFile(emailOfUser);
             }            
         }
-        public void populateContactsFromFile(string email)
+        public List<String> populateContactsFromFile(string email)
         {
+            List<String> con = new List<String>();
             string fileName = string.Concat(email, "-contacts.txt");
 
             if(File.Exists(fileName))
@@ -49,8 +57,7 @@ namespace StormSocial_Server.Classes
                     int i = 0;
                     while ((line = read.ReadLine()) != null)
                     {
-                        this.contacts[i] = line;
-                        i++;
+                        con.Add(line);
                     }
                 }
             }
@@ -59,6 +66,7 @@ namespace StormSocial_Server.Classes
                 using (FileStream newFile = File.Create(fileName)); //Create new file
 
             }
+            return con;
         }
     }
 }

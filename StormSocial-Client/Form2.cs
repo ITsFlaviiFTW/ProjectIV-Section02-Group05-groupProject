@@ -18,6 +18,7 @@ namespace StormSocial_Client
 {
     public partial class Form2 : Form
     {
+        Profile profile;
         public string ContactEmail { get; set; }
         public Form2()
         {
@@ -40,10 +41,29 @@ namespace StormSocial_Client
 
         private void Form2_Load(object sender, EventArgs e)
         {
+
+            currentUser.Text = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
+
+            profile = new Profile(currentUser.Text);
+            System.Windows.Forms.Button[] buttonArray = new System.Windows.Forms.Button[4];
+            buttonArray[0] = Contact1Button;
+            buttonArray[1] = Contact2Button;
+            buttonArray[2] = Contact3Button;
+            buttonArray[3] = Contact4Button;
+
+            if(profile.GetContacts().getContacts().Count > 0)
+            {
+                for (int i = 0; i < profile.GetContacts().getContacts().Count; i++)
+                {
+                    buttonArray[i].Text = profile.GetContacts().getContacts()[i];
+                    buttonArray[i].Visible = true;
+                }
+            }
+            
             if (!string.IsNullOrEmpty(ContactEmail))
             {
-                Contact1Button.Visible = true;
-                Contact1Button.Text = ContactEmail;
+                //Contact1Button.Visible = true;
+                //Contact1Button.Text = ContactEmail;
             }
         }
 
@@ -72,7 +92,6 @@ namespace StormSocial_Client
             // Append the email address and message to the OutgoingText TextBox
             OutgoingText.AppendText(userEmail + ": " + userMessage + Environment.NewLine);
         }
-
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
@@ -148,7 +167,7 @@ namespace StormSocial_Client
 
         private void differentChatButton_Click(object sender, EventArgs e)
         {
-            Form3 form3 = new Form3();
+            Form3 form3 = new Form3(currentUser.Text);
             form3.Show();
             this.Hide();
         }

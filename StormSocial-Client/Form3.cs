@@ -13,9 +13,15 @@ namespace StormSocial_Client
 {
     public partial class Form3 : Form
     {
+        Profile p;
         public Form3()
         {
             InitializeComponent();
+        }
+        public Form3(string email)
+        {
+            InitializeComponent();
+            p = new Profile(email);
         }
 
         private void confirmChatButton_Click(object sender, EventArgs e)
@@ -25,6 +31,8 @@ namespace StormSocial_Client
             email.setEmail(existingEmail);
             if (email.checkForExistingEmailInFile(existingEmail) == true)
             {
+                p.GetContacts().addNewContact(existingEmail);
+                p.GetContacts().writeContactToFile(p.GetLogin().getEmail());
                 Form2 form2 = new Form2();
                 form2.ContactEmail = existingEmail; // Set the ContactEmail property
                 form2.Show();
@@ -36,5 +44,9 @@ namespace StormSocial_Client
             }
         }
 
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

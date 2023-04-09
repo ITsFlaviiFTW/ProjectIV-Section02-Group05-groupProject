@@ -52,8 +52,8 @@ namespace StormSocial_Client
                 byte[] data = Encoding.ASCII.GetBytes(json);
                 Program.clientSocket.Send(data);
 
-                Form3 Form3 = new Form3();
-                Form3.Show();
+                Form2 Form2 = new Form2();
+                Form2.Show();
                 this.Hide();
             }
             else

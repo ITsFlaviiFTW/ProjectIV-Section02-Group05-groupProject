@@ -28,60 +28,60 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.chatLabel = new System.Windows.Forms.Label();
-            this.chatTextBox = new System.Windows.Forms.TextBox();
-            this.confirmChatButton = new System.Windows.Forms.Button();
-            this.errorLabel = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            chatLabel = new Label();
+            chatTextBox = new TextBox();
+            confirmChatButton = new Button();
+            errorLabel = new Label();
+            SuspendLayout();
             // 
             // chatLabel
             // 
-            this.chatLabel.AutoSize = true;
-            this.chatLabel.Location = new System.Drawing.Point(262, 131);
-            this.chatLabel.Name = "chatLabel";
-            this.chatLabel.Size = new System.Drawing.Size(106, 15);
-            this.chatLabel.TabIndex = 0;
-            this.chatLabel.Text = "Start Chatting with";
+            chatLabel.AutoSize = true;
+            chatLabel.Location = new Point(262, 131);
+            chatLabel.Name = "chatLabel";
+            chatLabel.Size = new Size(106, 15);
+            chatLabel.TabIndex = 0;
+            chatLabel.Text = "Start Chatting with";
             // 
             // chatTextBox
             // 
-            this.chatTextBox.Location = new System.Drawing.Point(268, 168);
-            this.chatTextBox.Name = "chatTextBox";
-            this.chatTextBox.Size = new System.Drawing.Size(100, 23);
-            this.chatTextBox.TabIndex = 1;
+            chatTextBox.Location = new Point(268, 168);
+            chatTextBox.Name = "chatTextBox";
+            chatTextBox.Size = new Size(100, 23);
+            chatTextBox.TabIndex = 1;
             // 
             // confirmChatButton
             // 
-            this.confirmChatButton.Location = new System.Drawing.Point(280, 210);
-            this.confirmChatButton.Name = "confirmChatButton";
-            this.confirmChatButton.Size = new System.Drawing.Size(75, 23);
-            this.confirmChatButton.TabIndex = 2;
-            this.confirmChatButton.Text = "Chat!";
-            this.confirmChatButton.UseVisualStyleBackColor = true;
-            this.confirmChatButton.Click += new System.EventHandler(this.confirmChatButton_Click);
+            confirmChatButton.Location = new Point(280, 210);
+            confirmChatButton.Name = "confirmChatButton";
+            confirmChatButton.Size = new Size(75, 23);
+            confirmChatButton.TabIndex = 2;
+            confirmChatButton.Text = "Chat!";
+            confirmChatButton.UseVisualStyleBackColor = true;
+            confirmChatButton.Click += confirmChatButton_Click;
             // 
             // errorLabel
             // 
-            this.errorLabel.AutoSize = true;
-            this.errorLabel.Location = new System.Drawing.Point(262, 280);
-            this.errorLabel.Name = "errorLabel";
-            this.errorLabel.Size = new System.Drawing.Size(0, 15);
-            this.errorLabel.TabIndex = 3;
+            errorLabel.AutoSize = true;
+            errorLabel.Location = new Point(262, 280);
+            errorLabel.Name = "errorLabel";
+            errorLabel.Size = new Size(0, 15);
+            errorLabel.TabIndex = 3;
             // 
             // Form3
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(636, 382);
-            this.Controls.Add(this.errorLabel);
-            this.Controls.Add(this.confirmChatButton);
-            this.Controls.Add(this.chatTextBox);
-            this.Controls.Add(this.chatLabel);
-            this.Name = "Form3";
-            this.Text = "Form3";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(636, 382);
+            Controls.Add(errorLabel);
+            Controls.Add(confirmChatButton);
+            Controls.Add(chatTextBox);
+            Controls.Add(chatLabel);
+            Name = "Form3";
+            Text = "Form3";
+            Load += Form3_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
