@@ -102,7 +102,7 @@ namespace SimpleClientServer
                     Console.WriteLine($"  Timestamp: {packet.GetTimeStamp()}");
                     Console.WriteLine($"  Data Type: {packet.GetDataType()}");
                     Console.WriteLine($"  Data Size: {packet.GetPacketData().Length} bytes\n");
-                    Console.WriteLine($"Email: {packet.GetEmail()}");
+                    Console.WriteLine($"  Email: {packet.GetEmail()}");
                 }
                 catch (JsonReaderException ex)
                 {
