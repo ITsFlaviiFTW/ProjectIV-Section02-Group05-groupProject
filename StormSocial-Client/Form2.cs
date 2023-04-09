@@ -81,6 +81,7 @@ namespace StormSocial_Client
             // Create the data packet
             var packet = new DataPacket.DataPacketStruct
             {
+                email = userEmail,
                 sequenceNumber = 1,
                 dataType = "text/plain",
                 packetData = userMessage,
@@ -143,6 +144,9 @@ namespace StormSocial_Client
                 openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
                 openFileDialog.Multiselect = false;
 
+                // Retrieve the user's email address
+                string userEmail = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
+
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     byte[] imageData = File.ReadAllBytes(openFileDialog.FileName);
@@ -160,6 +164,7 @@ namespace StormSocial_Client
 
                         var packet = new DataPacket.DataPacketStruct
                         {
+                            email = userEmail,
                             sequenceNumber = i + 1,
                             dataType = "image",
                             packetData = currentChunkData,
