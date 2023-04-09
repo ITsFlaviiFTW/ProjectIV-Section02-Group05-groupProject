@@ -37,10 +37,13 @@ namespace SimpleClientServer
         {
             var buffer = new byte[DataPacket.DataPacketTcpSocket.MaxPacketSize];
             StringBuilder imageDataBuilder = new StringBuilder();
-            StringBuilder receivedDataBuilder = new StringBuilder(); // Added this line
+            StringBuilder receivedDataBuilder = new StringBuilder(); 
             string currentDataType = "";
             string currentEmail = "";
             bool isLastPacket = false;
+
+            List<string> imagePacketsData = new List<string>();
+
 
             while (clientSocket.Connected)
             {
@@ -77,24 +80,24 @@ namespace SimpleClientServer
 
                     if (currentDataType == "image")
                     {
-                        imageDataBuilder.Append(packet.GetPacketData());
+                        imagePacketsData.Add(packet.GetPacketData());
 
                         if (isLastPacket)
                         {
-                            DataPacket.PacketManipulation.ProcessDataPacket(packet);
+                            string completeImageData = string.Concat(imagePacketsData);
+                            DataPacket.PacketManipulation.ProcessDataPacket(packet, completeImageData);
+                            imagePacketsData.Clear();
                         }
                     }
+
                     if (currentDataType == "text/plain")
                     {
-                        DataPacket.PacketManipulation.ProcessDataPacket(packet);
+                        DataPacket.PacketManipulation.ProcessDataPacket(packet, null);
                     }
                     if (currentDataType == "profile_data")
                     {
                         File.WriteAllText($"profile_{currentEmail}.txt", packet.GetPacketData());
                     }
-                    
-
-
 
                     // Print information for each received packet
                     Console.WriteLine($"Packet Received from {packet.GetSourceAddress()}");

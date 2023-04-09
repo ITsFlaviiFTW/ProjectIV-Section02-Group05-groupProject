@@ -32,7 +32,7 @@ namespace StormSocial_Server.Classes
             public DataPacketStruct(string email)
             {
                 this.email = email;
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
                 this.sequenceNumber = 0;
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = "text/plain";
@@ -44,7 +44,7 @@ namespace StormSocial_Server.Classes
             // Constructor to initialize the packet 
             public DataPacketStruct()
             {
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
                 this.sequenceNumber = 0;
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = "text/plain";
@@ -57,7 +57,7 @@ namespace StormSocial_Server.Classes
             public DataPacketStruct(string email, int sequenceNumber, string dataType, string data, uint checksum)
             {
                 this.email = email;
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
                 this.sequenceNumber = sequenceNumber;
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = dataType;
@@ -70,7 +70,7 @@ namespace StormSocial_Server.Classes
             public DataPacketStruct(string email, int sequenceNumber, string dataType, string data, uint checksum, bool isLastPacket)
             {
                 this.email = email;
-                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.ToString() ?? "Unknown"; // Get Source Address
+                this.sourceAddress = Dns.GetHostAddresses(Dns.GetHostName())?.FirstOrDefault()?.ToString() ?? "Unknown";
                 this.sequenceNumber = sequenceNumber;
                 this.timeStamp = DateTime.Now.ToString();
                 this.dataType = dataType;
@@ -176,16 +176,17 @@ namespace StormSocial_Server.Classes
             }
 
             // Convert 
-            public static void ProcessDataPacket(DataPacketStruct receivedPacket)
+            public static void ProcessDataPacket(DataPacketStruct receivedPacket, string completeImageData)
             {
-                if (receivedPacket.dataType == "image") // Decode and write package image to local path 
+                if (receivedPacket.GetDataType() == "image") // Decode and write package image to local path 
                 {
-                    string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
-                    string encodedPacketImage = receivedPacket.packetData; // Get encoded image from packet 
-
-                    DecodeAndWriteImageToFile(encodedPacketImage, imagePath); // Decode received image and write to file
+                    if (!string.IsNullOrEmpty(completeImageData))
+                    {
+                        string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
+                        DecodeAndWriteImageToFile(completeImageData, imagePath); // Decode received image and write to file
+                    }
                 }
-                if (receivedPacket.dataType == "text/plain")
+                if (receivedPacket.GetDataType() == "text/plain")
                 {
                     // Process text
                     string textPath = GetUniqueLogPath();
@@ -215,7 +216,7 @@ namespace StormSocial_Server.Classes
         {
             private readonly int port; // Port to connect to 
             private readonly string ipAddress; // IP address of the server 
-            public const int MaxPacketSize = 1024; 
+            public const int MaxPacketSize = 1024;
 
             public DataPacketTcpSocket(string ipAddress, int port) // Constructor 
             {

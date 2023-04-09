@@ -176,16 +176,17 @@ namespace StormSocial_Server.Classes
             }
 
             // Convert 
-            public static void ProcessDataPacket(DataPacketStruct receivedPacket)
+            public static void ProcessDataPacket(DataPacketStruct receivedPacket, string completeImageData)
             {
-                if (receivedPacket.dataType == "image") // Decode and write package image to local path 
+                if (receivedPacket.GetDataType() == "image") // Decode and write package image to local path 
                 {
-                    string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
-                    string encodedPacketImage = receivedPacket.packetData; // Get encoded image from packet 
-
-                    DecodeAndWriteImageToFile(encodedPacketImage, imagePath); // Decode received image and write to file
+                    if (!string.IsNullOrEmpty(completeImageData))
+                    {
+                        string imagePath = GetUniqueImagePath(); // Get unique image path for received photo
+                        DecodeAndWriteImageToFile(completeImageData, imagePath); // Decode received image and write to file
+                    }
                 }
-                if (receivedPacket.dataType == "text/plain")
+                if (receivedPacket.GetDataType() == "text/plain")
                 {
                     // Process text
                     string textPath = GetUniqueLogPath();

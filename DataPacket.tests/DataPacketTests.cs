@@ -146,7 +146,7 @@ namespace StormSocial_Server.Tests
             // Act
             try
             {
-                DataPacket.PacketManipulation.ProcessDataPacket(packet);
+                DataPacket.PacketManipulation.ProcessDataPacket(packet, null);
             }
             catch (AssertFailedException ex)
             {
