@@ -88,15 +88,22 @@ namespace SimpleClientServer
                     {
                         DataPacket.PacketManipulation.ProcessDataPacket(packet);
                     }
+                    if (currentDataType == "profile_data")
+                    {
+                        File.WriteAllText($"profile{currentEmail}.txt", packet.GetPacketData());
+                    }
+                    
 
 
 
                     // Print information for each received packet
                     Console.WriteLine($"Packet Received from {packet.GetSourceAddress()}");
+                    Console.WriteLine($"  Email: {packet.GetEmail()}");
                     Console.WriteLine($"  Sequence Number: {packet.GetSequenceNumber()}");
                     Console.WriteLine($"  Timestamp: {packet.GetTimeStamp()}");
                     Console.WriteLine($"  Data Type: {packet.GetDataType()}");
                     Console.WriteLine($"  Data Size: {packet.GetPacketData().Length} bytes\n");
+                    Console.WriteLine($"  Email: {packet.GetEmail()}");
                 }
                 catch (JsonReaderException ex)
                 {

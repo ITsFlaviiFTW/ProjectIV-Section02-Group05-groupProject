@@ -18,6 +18,7 @@ namespace StormSocial_Client
 {
     public partial class Form2 : Form
     {
+        Profile profile;
         public string ContactEmail { get; set; }
         public Form2()
         {
@@ -40,10 +41,33 @@ namespace StormSocial_Client
 
         private void Form2_Load(object sender, EventArgs e)
         {
+
+            currentUser.Text = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
+
+            profile = new Profile(currentUser.Text);
+            System.Windows.Forms.Button[] buttonArray = new System.Windows.Forms.Button[4];
+            buttonArray[0] = Contact1Button;
+            buttonArray[1] = Contact2Button;
+            buttonArray[2] = Contact3Button;
+            buttonArray[3] = Contact4Button;
+
+            for (int i = 0; i < buttonArray.Length; i++)
+            {
+                buttonArray[i].Visible = false;
+            }
+            if (profile.GetContacts().getContacts().Count > 0)
+            {
+                for (int i = 0; i < profile.GetContacts().getContacts().Count; i++)
+                {
+                    buttonArray[i].Text = profile.GetContacts().getContacts()[i];
+                    buttonArray[i].Visible = true;
+                }
+            }
+
             if (!string.IsNullOrEmpty(ContactEmail))
             {
-                Contact1Button.Visible = true;
-                Contact1Button.Text = ContactEmail;
+                //Contact1Button.Visible = true;
+                //Contact1Button.Text = ContactEmail;
             }
         }
 
@@ -57,6 +81,7 @@ namespace StormSocial_Client
             // Create the data packet
             var packet = new DataPacket.DataPacketStruct
             {
+                email = userEmail,
                 sequenceNumber = 1,
                 dataType = "text/plain",
                 packetData = userMessage,
@@ -73,15 +98,36 @@ namespace StormSocial_Client
             OutgoingText.AppendText(userEmail + ": " + userMessage + Environment.NewLine);
         }
 
-
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
+
+            // Read the profiles.txt file
+            string profilesPath = "profiles.txt";
+            if (File.Exists(profilesPath))
+            {
+                string profileData = File.ReadAllText(profilesPath);
+
+                // Create the data packet
+                var packet = new DataPacket.DataPacketStruct
+                {
+                    sequenceNumber = 1,
+                    dataType = "profile_data",
+                    packetData = profileData,
+                    checksum = 0
+                };
+
+                // Serialize and send the packet
+                var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                var JSONbytes = Encoding.ASCII.GetBytes(json);
+                Program.clientSocket.Send(JSONbytes);
+            }
 
             // Clean up the socket connection
             Program.clientSocket.Shutdown(SocketShutdown.Both);
             Program.clientSocket.Close();
         }
+
 
         private void MessageTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -97,6 +143,9 @@ namespace StormSocial_Client
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
                 openFileDialog.Multiselect = false;
+
+                // Retrieve the user's email address
+                string userEmail = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -115,6 +164,7 @@ namespace StormSocial_Client
 
                         var packet = new DataPacket.DataPacketStruct
                         {
+                            email = userEmail,
                             sequenceNumber = i + 1,
                             dataType = "image",
                             packetData = currentChunkData,
@@ -141,17 +191,35 @@ namespace StormSocial_Client
 
 
 
-        private void Contact1Button_Click(object sender, EventArgs e)
-        {
 
-        }
 
         private void differentChatButton_Click(object sender, EventArgs e)
         {
-            Form3 form3 = new Form3();
+            Form3 form3 = new Form3(currentUser.Text); //send to current user to intialize the proflie on form 3
             form3.Show();
             this.Hide();
         }
+        private void Contact1Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact1Button.Text;
+        }
+
+        private void Contact2Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact2Button.Text;
+        }
+
+        private void Contact3Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact3Button.Text;
+        }
+
+        private void Contact4Button_Click(object sender, EventArgs e)
+        {
+            currentContact.Text = Contact4Button.Text;
+        }
+
+        
 
         private void AddContactButton_Click(object sender, EventArgs e)
         {

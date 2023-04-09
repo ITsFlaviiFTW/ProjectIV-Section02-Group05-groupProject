@@ -11,15 +11,16 @@ namespace StormSocial_Server.Classes
     {
         private string firstName;
         private string lastName;
-        Login log_in;
-        Contacts contacts;
+        private Login log_in;
+        private Contacts contacts;
 
-         public Profile(string firstName, string lastName, Login log_in)
+        /******************\/CONSTRUCTORS\/******************************************/
+        public Profile(string firstName, string lastName, Login log_in)
         {
             this.firstName = firstName;
             this.lastName = lastName;
             this.log_in = log_in;
-            this.setContacts();
+            //this.setContacts();
         }
         public Profile()
         {
@@ -27,20 +28,47 @@ namespace StormSocial_Server.Classes
             this.log_in.setPassword(string.Empty);
             this.firstName = string.Empty;
             this.lastName = string.Empty;
-            this.setContacts();
         }
+        public Profile(string email)
+        {
+            string fileName = "profiles.txt";
 
+            if (File.Exists(fileName))
+            {
+                using (StreamReader reader = new StreamReader(fileName))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)  // read lines in untill end of file is reached
+                    {
+                        string[] seperate = line.Split(';');    //splits the line into array on the ';'
+                        if (seperate[0] == email)               //email will be at index 0 cuz it was the first item in the line
+                        {
+                            Login l = new Login();
+                            l.setEmail(email);
+                            l.setPassword(seperate[1]);         //email[0] password[1] firstName[2] lastName[3] 
+                            this.setLogin(l);
+                            this.setLastName(seperate[2]);
+                            this.setLastName(seperate[3]);
+                            this.loadContacts(email);
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        /******************^CONSTRUCTORS^******************************************/
 
         /***********SETTERS AND GETTERS******************************************/
         public void setFirstName(string firstName) { this.firstName = firstName; }
-        public void setLastName(string lastName) {  this.lastName = lastName; }
-        public void setLogin(Login login) { this.log_in=login; }
-        public string getFirstName() { return this.firstName;}
-        public string getLastName() { return this.lastName;}
-        public Login GetLogin() { return this.log_in;}
+        public void setLastName(string lastName) { this.lastName = lastName; }
+        public void setLogin(Login login) { this.log_in = login; }
+        public string getFirstName() { return this.firstName; }
+        public string getLastName() { return this.lastName; }
+        public Login GetLogin() { return this.log_in; }
+        public Contacts GetContacts() { return this.contacts; }
+        public void setContacts(Contacts c) { this.contacts = c; }
         /***********SETTERS AND GETTERS******************************************/
-
-
 
         public void saveProfileToFile()
         {
@@ -59,9 +87,10 @@ namespace StormSocial_Server.Classes
                 saveProfileToFile(); // re-call the function to save the info
             }
         }
-        private void setContacts()
+        private void loadContacts(string email)
         {
-            //this.contacts.populateContactsFromFile(this.GetLogin().getEmail());
+            Contacts c = new Contacts(email);
+            this.setContacts(c);
         }
     }
 }
