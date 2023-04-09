@@ -88,6 +88,11 @@ namespace SimpleClientServer
                     {
                         DataPacket.PacketManipulation.ProcessDataPacket(packet);
                     }
+                    if (currentDataType == "profile_data")
+                    {
+                        File.WriteAllText($"profile_{currentEmail}.txt", packet.GetPacketData());
+                    }
+                    
 
 
 

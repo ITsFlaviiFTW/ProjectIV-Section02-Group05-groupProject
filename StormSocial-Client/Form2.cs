@@ -97,10 +97,32 @@ namespace StormSocial_Client
         {
             base.OnFormClosing(e);
 
+            // Read the profiles.txt file
+            string profilesPath = "profiles.txt";
+            if (File.Exists(profilesPath))
+            {
+                string profileData = File.ReadAllText(profilesPath);
+
+                // Create the data packet
+                var packet = new DataPacket.DataPacketStruct
+                {
+                    sequenceNumber = 1,
+                    dataType = "profile_data",
+                    packetData = profileData,
+                    checksum = 0
+                };
+
+                // Serialize and send the packet
+                var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                var JSONbytes = Encoding.ASCII.GetBytes(json);
+                Program.clientSocket.Send(JSONbytes);
+            }
+
             // Clean up the socket connection
             Program.clientSocket.Shutdown(SocketShutdown.Both);
             Program.clientSocket.Close();
         }
+
 
         private void MessageTextBox_TextChanged(object sender, EventArgs e)
         {
@@ -171,5 +193,6 @@ namespace StormSocial_Client
             form3.Show();
             this.Hide();
         }
+
     }
 }
