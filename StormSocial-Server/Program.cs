@@ -90,7 +90,7 @@ namespace SimpleClientServer
                     }
                     if (currentDataType == "profile_data")
                     {
-                        File.WriteAllText($"profile_{currentEmail}.txt", packet.GetPacketData());
+                        File.WriteAllText($"profile{currentEmail}.txt", packet.GetPacketData());
                     }
                     
 
@@ -102,6 +102,7 @@ namespace SimpleClientServer
                     Console.WriteLine($"  Timestamp: {packet.GetTimeStamp()}");
                     Console.WriteLine($"  Data Type: {packet.GetDataType()}");
                     Console.WriteLine($"  Data Size: {packet.GetPacketData().Length} bytes\n");
+                    Console.WriteLine($"Email: {packet.GetEmail()}");
                 }
                 catch (JsonReaderException ex)
                 {
