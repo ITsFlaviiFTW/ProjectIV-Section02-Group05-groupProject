@@ -186,11 +186,11 @@ namespace StormSocial_Client
 
 
 
-       
+
 
         private void differentChatButton_Click(object sender, EventArgs e)
         {
-            Form3 form3 = new Form3(currentUser.Text);
+            Form3 form3 = new Form3(currentUser.Text); //send to current user to intialize the proflie on form 3
             form3.Show();
             this.Hide();
         }
@@ -214,5 +214,6 @@ namespace StormSocial_Client
             currentContact.Text = Contact4Button.Text;
         }
 
+        
     }
 }
