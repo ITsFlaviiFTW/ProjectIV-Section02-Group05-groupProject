@@ -124,6 +124,8 @@ namespace StormSocial_Client
             }
 
             // Clean up the socket connection
+            File.Delete(profilesPath);
+
             Program.clientSocket.Shutdown(SocketShutdown.Both);
             Program.clientSocket.Close();
         }

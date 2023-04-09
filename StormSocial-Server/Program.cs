@@ -35,6 +35,23 @@ namespace SimpleClientServer
 
         static async Task HandleClientAsync(Socket clientSocket)
         {
+            string profileFile = "profile.txt";
+            if(File.Exists(profileFile))
+            {
+                string profileData = File.ReadAllText(profileFile);
+
+                var packet = new DataPacket.DataPacketStruct
+                {
+                    sequenceNumber = 1, 
+                    dataType = "profile_data",
+                    packetData = profileData,
+                    checksum = 0
+                };
+                var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                var JSONbytes = Encoding.ASCII.GetBytes(json);
+                clientSocket.Send(JSONbytes);
+            }
+           
             var buffer = new byte[DataPacket.DataPacketTcpSocket.MaxPacketSize];
             StringBuilder imageDataBuilder = new StringBuilder();
             StringBuilder receivedDataBuilder = new StringBuilder(); // Added this line

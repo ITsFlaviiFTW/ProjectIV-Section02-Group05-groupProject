@@ -18,11 +18,40 @@ namespace SimpleClientServer
         public static Dictionary<string, Login> loggedInClients = new Dictionary<string, Login>();
 
         [STAThread]
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, 1234));
 
 
+            //view server program.cs for documentation
+            var buffer = new byte[DataPacket.DataPacketTcpSocket.MaxPacketSize];
+            int bytesRead = await clientSocket.ReceiveAsync(buffer, SocketFlags.None);
+            StringBuilder receivedDataBuilder = new StringBuilder();
+
+            string partialReceivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            receivedDataBuilder.Append(partialReceivedData);
+
+            string receivedData = receivedDataBuilder.ToString();
+            bool isLastPacket = false;
+            string currentDataType = "";
+
+            receivedDataBuilder.Clear();
+
+            try
+            {
+                var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(receivedData);
+                isLastPacket = packet.isLastPacket;
+                currentDataType = packet.GetDataType();
+
+                if (currentDataType == "profile_data")
+                {
+                    File.WriteAllText($"profiles.txt", packet.GetPacketData());
+                }
+            }
+            catch
+            {
+
+            }
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
