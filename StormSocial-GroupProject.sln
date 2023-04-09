@@ -14,6 +14,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nicos-Tests", "Nicos-Tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataPacket.tests", "DataPacket.tests\DataPacket.tests.csproj", "{972722D6-4CD9-498C-8B7F-E05AC4DC39F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StateMachineTests", "StateMachineTests\StateMachineTests.csproj", "{4EFF4B8B-A029-41FF-A560-97C40F69B2C7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{463CADCB-2FD0-49BE-BE78-1EBDA81A0626} = {463CADCB-2FD0-49BE-BE78-1EBDA81A0626}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +41,10 @@ Global
 		{972722D6-4CD9-498C-8B7F-E05AC4DC39F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{972722D6-4CD9-498C-8B7F-E05AC4DC39F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{972722D6-4CD9-498C-8B7F-E05AC4DC39F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EFF4B8B-A029-41FF-A560-97C40F69B2C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EFF4B8B-A029-41FF-A560-97C40F69B2C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EFF4B8B-A029-41FF-A560-97C40F69B2C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EFF4B8B-A029-41FF-A560-97C40F69B2C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

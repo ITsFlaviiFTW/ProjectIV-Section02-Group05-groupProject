@@ -12,6 +12,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
 using System.Net.Sockets;
 
+
 namespace StormSocial_Server.Classes
 {
     public class DataPacket // Class for structure of 

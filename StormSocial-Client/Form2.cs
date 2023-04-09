@@ -128,6 +128,7 @@ namespace StormSocial_Client
         }
 
 
+
         private void MessageTextBox_TextChanged(object sender, EventArgs e)
         {
 
@@ -184,12 +185,9 @@ namespace StormSocial_Client
             }
         }
 
-
-
-       
-
         private void differentChatButton_Click(object sender, EventArgs e)
         {
+            
             Form3 form3 = new Form3(currentUser.Text);
             form3.Show();
             this.Hide();

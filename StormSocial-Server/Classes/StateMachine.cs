@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("StateMachineTests")]
 
 namespace StormSocial_Server.Classes
 {

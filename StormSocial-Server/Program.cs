@@ -92,7 +92,7 @@ namespace SimpleClientServer
                     {
                         File.WriteAllText($"profile_{currentEmail}.txt", packet.GetPacketData());
                     }
-                    
+
 
 
 
