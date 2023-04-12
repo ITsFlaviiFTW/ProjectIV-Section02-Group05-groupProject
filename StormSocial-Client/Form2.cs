@@ -267,6 +267,7 @@ namespace StormSocial_Client
                     var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
                     var JSONbytes = Encoding.ASCII.GetBytes(json);
                     Program.clientSocket.Send(JSONbytes);
+                    Thread.Sleep(1000);
                 }
                 
             }

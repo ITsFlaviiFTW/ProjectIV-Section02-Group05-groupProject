@@ -17,6 +17,7 @@ namespace SimpleClientServer
         public static Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public static Dictionary<string, Login> loggedInClients = new Dictionary<string, Login>();
 
+        [STAThread]
         static async Task Main(string[] args)
         {
             clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, 1234));

@@ -14,7 +14,6 @@ namespace SimpleClientServer
     {
         private static Dictionary<string, string> emailToSocketAddressMap = new Dictionary<string, string>();
 
-        [STAThread]
         static async Task Main(string[] args)
         {
             // Create the server socket
@@ -134,62 +133,62 @@ namespace SimpleClientServer
                     Console.WriteLine($"  Data Type: {packet.GetDataType()}");
                     Console.WriteLine($"  Data Size: {packet.GetPacketData().Length} bytes");
                     Console.WriteLine($"  Email: {packet.GetEmail()}\n");
-                    bool firstMessage = true;
-                    if (firstMessage)
-                    {
-                        List<string> contacts = new List<string>();
-                        string contactsFile = string.Concat(packet.GetEmail(), "-contacts.txt");
-                        if(File.Exists(contactsFile))
-                        {
+                    //bool firstMessage = true;
+                    //if (firstMessage)
+                    //{
+                    //    List<string> contacts = new List<string>();
+                    //    string contactsFile = string.Concat(packet.GetEmail(), "-contacts.txt");
+                    //    if(File.Exists(contactsFile))
+                    //    {
                             
-                            using(StreamReader sr = new StreamReader(contactsFile))
-                            {
-                                string line;
-                                while ((line = sr.ReadLine()) != null)
-                                {
-                                    contacts.Add(line);
-                                }
-                            }
+                    //        using(StreamReader sr = new StreamReader(contactsFile))
+                    //        {
+                    //            string line;
+                    //            while ((line = sr.ReadLine()) != null)
+                    //            {
+                    //                contacts.Add(line);
+                    //            }
+                    //        }
                             
-                        }
-                        for(int i = 0; i < contacts.Count; i++)
-                        {
-                            string fileName = string.Concat(packet.GetEmail(), "-", contacts[i], "-chats.txt");
-                            if (File.Exists(fileName))
-                            {
-                                string data = File.ReadAllText(fileName);
+                    //    }
+                    //    for(int i = 0; i < contacts.Count; i++)
+                    //    {
+                    //        string fileName = string.Concat(packet.GetEmail(), "-", contacts[i], "-chats.txt");
+                    //        if (File.Exists(fileName))
+                    //        {
+                    //            string data = File.ReadAllText(fileName);
 
-                                // Create the data packet
-                                var newPacket = new DataPacket.DataPacketStruct
-                                {
-                                    sequenceNumber = 1,
-                                    dataType = "chat_history",
-                                    packetData = data,
-                                    email = packet.GetEmail(),
-                                    checksum = 0
-                                };
+                    //            // Create the data packet
+                    //            var newPacket = new DataPacket.DataPacketStruct
+                    //            {
+                    //                sequenceNumber = 1,
+                    //                dataType = "chat_history",
+                    //                packetData = data,
+                    //                email = packet.GetEmail(),
+                    //                checksum = 0
+                    //            };
 
-                                // Serialize and send the packet
-                                var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
-                                var JSONbytes = Encoding.ASCII.GetBytes(json);
-                                clientSocket.Send(JSONbytes);
-                            }
-                        }
+                    //            // Serialize and send the packet
+                    //            var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                    //            var JSONbytes = Encoding.ASCII.GetBytes(json);
+                    //            clientSocket.Send(JSONbytes);
+                    //        }
+                    //    }
 
-                        firstMessage = false;
-                        string contactsData = File.ReadAllText(contactsFile);
-                        var Newpacket = new DataPacket.DataPacketStruct
-                        {
-                            sequenceNumber = 1,
-                            dataType = "contact_file",
-                            packetData = contactsData,
-                            email = packet.GetEmail(),
-                            checksum = 0
-                        };
-                        var json2 = DataPacket.PacketManipulation.SerializeDataPacketStruct(Newpacket);
-                        var JSONbytes2 = Encoding.ASCII.GetBytes(json2);
-                        clientSocket.Send(JSONbytes2);
-                    }
+                    //    firstMessage = false;
+                    //    string contactsData = File.ReadAllText(contactsFile);
+                    //    var Newpacket = new DataPacket.DataPacketStruct
+                    //    {
+                    //        sequenceNumber = 1,
+                    //        dataType = "contact_file",
+                    //        packetData = contactsData,
+                    //        email = packet.GetEmail(),
+                    //        checksum = 0
+                    //    };
+                    //    var json2 = DataPacket.PacketManipulation.SerializeDataPacketStruct(Newpacket);
+                    //    var JSONbytes2 = Encoding.ASCII.GetBytes(json2);
+                    //    clientSocket.Send(JSONbytes2);
+                    //}
                 }
                 catch (JsonReaderException ex)
                 {
