@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Enumeration;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -26,91 +27,56 @@ namespace StormSocial_Server.Classes
             return string.Concat(this.getSender(), ";", this.getRecipient(), ";", this.getMessage());
         }
     }
-    internal class Chat
+    public class Chat
     {
-        private Profile sender;
-        private Profile recipient;
-        private List <Message> message;
+        private string sender;
+        private string recipient;
+        private string fileName;
 
-        public Chat(Profile sender, Profile recipient)
+        public Chat(string sender, string recipient)
         {
             this.sender = sender;
             this.recipient = recipient;
-            message = new List <Message>();
+            this.fileName = string.Concat(this.getSender(), "-", this.getRecipient(), "-", "chats.txt");
         }
 
-        public Profile getSender() { return this.sender; }
-        public Profile getRecipient() { return this.recipient; }
-        public void setSender(Profile sender) { this.sender = sender;}
-        public void setRecipient(Profile recipient) {  this.recipient = recipient;}
+        public string getSender() { return this.sender; }
+        public string getRecipient() { return this.recipient; }
+        public void setSender(string sender) { this.sender = sender;}
+        public void setRecipient(string recipient) {  this.recipient = recipient;}
+        public string getFile() { return this.fileName; }
 
-        public void addMsg(string sender, string recipient, string msg)
+        public void addMessageTochat(string msg)
         {
-            Message m = new Message(); 
-            m.setMessage(msg);
-            m.setSender(sender); 
-            m.setRecipient(recipient);
-
-            message.Add(m);
-
-        }
-        /**
-        public void writeChatToFile()
-        {
-            //int numOfChats = getNumOfChats();
-            string fileName = string.Concat(this.getSender().GetLogin().getEmail(), "-data-", numOfChats, ".txt");
-
-            if(File.Exists(fileName))
+            if(File.Exists(this.getFile()))
             {
-                using(StreamWriter writer= new StreamWriter(fileName))
+                using (StreamWriter writer = new StreamWriter(this.getFile(), true))
                 {
-                    writer.WriteLine(this.getSender().getFirstName() + ";" + this.getRecipient().getFirstName());
-                    for(int i = 0; i < message.Count; i++)
-                    {
-                        writer.WriteLine(message[i].createStringToWriteToFile());
-                    }
+                    writer.WriteLine(msg);
+                    writer.Close();
                 }
             }
             else
             {
+                using (FileStream f = File.Create(this.getFile())) ;
+                using (StreamWriter writer = new StreamWriter(this.getFile(), true))
+                {
+                    writer.WriteLine(string.Concat(this.getSender(), ":", this.getRecipient(), ":"));
+                    writer.WriteLine(msg);
+                    writer.Close();
+                }
 
             }
         }
-        **/
-        //public int getNumOfChats()
-        //{
-        //    string fileName = string.Concat(this.getSender().GetLogin().getEmail(), "-numOfChats.txt"); //filename will be <example@gmail.com-numOfChats.txt>
-        //    int numOfChats;
-
-        //    if (File.Exists(fileName)) //check to see if the file exists
-        //    {
-        //        string line;
-                
-        //        using(StreamReader read = new StreamReader(fileName))
-        //        {
-        //            line = read.ReadLine(); // read the only line of the file
-        //            numOfChats = int.Parse(line); //covert contents of the line to an int
-        //            //numOfChats++; //increase to reprsent the new chat being added
-        //            read.Close();
-        //        }
-        //        using(StreamWriter write = new StreamWriter(fileName))
-        //        {
-        //            write.WriteLine(numOfChats);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        using(FileStream stream = File.Create(fileName)) ; // create file if it does'nt exist
-        //        using(StreamWriter write = new StreamWriter(fileName))
-        //        {
-        //            write.WriteLine("1"); //because the file does not exist this will be first chat so we can set it to 1
-        //            write.Close();
-        //        }
-                
-        //        return 1;
-        //    }
-        //    return numOfChats;
-        //}
+        public string fillTextBox()
+        {
+            if (File.Exists(this.getFile()))
+            {
+                return File.ReadAllText(this.getFile());
+            }
+            return "";
+        }
+        
     }
 }
 /*

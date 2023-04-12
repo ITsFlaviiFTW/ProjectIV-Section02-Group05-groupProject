@@ -63,6 +63,7 @@
             ContactsPanel.Controls.Add(Contact2Button);
             ContactsPanel.Controls.Add(Contact1Button);
             ContactsPanel.Controls.Add(ContactsLabel);
+            ContactsPanel.Controls.Add(CurrentChatName);
             ContactsPanel.Location = new Point(12, 12);
             ContactsPanel.Name = "ContactsPanel";
             ContactsPanel.Size = new Size(200, 542);
@@ -138,7 +139,7 @@
             // CurrentChatName
             // 
             CurrentChatName.AutoSize = true;
-            CurrentChatName.Location = new Point(16, 15);
+            CurrentChatName.Location = new Point(3, 0);
             CurrentChatName.Name = "CurrentChatName";
             CurrentChatName.Size = new Size(91, 15);
             CurrentChatName.TabIndex = 0;
@@ -157,7 +158,6 @@
             panel1.Controls.Add(MessageTextBox);
             panel1.Controls.Add(IncomingText);
             panel1.Controls.Add(OutgoingText);
-            panel1.Controls.Add(CurrentChatName);
             panel1.Location = new Point(218, 12);
             panel1.Name = "panel1";
             panel1.Size = new Size(893, 542);

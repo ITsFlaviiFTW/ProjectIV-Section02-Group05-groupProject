@@ -1,5 +1,6 @@
 using SimpleClientServer;
 using StormSocial_Server.Classes;
+using System.Net.Sockets;
 using System.Text;
 
 namespace StormSocial_Client
@@ -52,6 +53,8 @@ namespace StormSocial_Client
                 byte[] data = Encoding.ASCII.GetBytes(json);
                 Program.clientSocket.Send(data);
 
+                //_ = Task.Run(() => HandleClientAsync(Program.clientSocket));
+
                 Form2 Form2 = new Form2();
                 Form2.Show();
                 this.Hide();
@@ -62,7 +65,54 @@ namespace StormSocial_Client
             }
         }
 
+        //static async Task HandleClientAsync(Socket clientSocket)
+        //{
+        //    bool moreFiles = true;
+        //    while(moreFiles)
+        //    {
+        //        var buffer = new byte[DataPacket.DataPacketTcpSocket.MaxPacketSize];
+        //        int bytesRead = await Program.clientSocket.ReceiveAsync(buffer, SocketFlags.None);
+        //        StringBuilder receivedDataBuilder = new StringBuilder();
 
+        //        string partialReceivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+        //        receivedDataBuilder.Append(partialReceivedData);
+
+        //        string receivedData = receivedDataBuilder.ToString();
+        //        bool isLastPacket = false;
+        //        string currentDataType = "";
+
+        //        receivedDataBuilder.Clear();
+
+        //        try
+        //        {
+        //            var packet = DataPacket.PacketManipulation.DeserializeDataPacketStruct(receivedData);
+        //            isLastPacket = packet.isLastPacket;
+        //            currentDataType = packet.GetDataType();
+
+        //            if (currentDataType == "profile_data")
+        //            {
+        //                File.WriteAllText($"profiles.txt", packet.GetPacketData());
+        //            }
+        //            if (currentDataType == "chat_history")
+        //            {
+        //                string content = packet.GetPacketData();
+        //                string[] splitContent = content.Split(':');
+        //                string fileName = string.Concat(splitContent[0], "-", splitContent[1], "-chats.txt");
+        //                File.WriteAllText($"{fileName}", packet.GetPacketData());
+        //            }
+        //            if (currentDataType == "contact_file")
+        //            {
+        //                File.WriteAllText($"{packet.GetEmail()}-contacts.txt", packet.GetPacketData());
+        //                moreFiles = true;
+        //            }
+        //        }
+        //        catch
+        //        {
+
+        //        }
+        //    }
+            
+        //}
 
         private void SloganPanel_Paint(object sender, PaintEventArgs e)
         {

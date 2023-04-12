@@ -17,12 +17,11 @@ namespace SimpleClientServer
         public static Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public static Dictionary<string, Login> loggedInClients = new Dictionary<string, Login>();
 
-        [STAThread]
         static async Task Main(string[] args)
         {
             clientSocket.Connect(new IPEndPoint(IPAddress.Loopback, 1234));
 
-
+            
             //view server program.cs for documentation
             var buffer = new byte[DataPacket.DataPacketTcpSocket.MaxPacketSize];
             int bytesRead = await clientSocket.ReceiveAsync(buffer, SocketFlags.None);
@@ -46,6 +45,17 @@ namespace SimpleClientServer
                 if (currentDataType == "profile_data")
                 {
                     File.WriteAllText($"profiles.txt", packet.GetPacketData());
+                }
+                if(currentDataType == "chat_history")
+                {
+                    string content = packet.GetPacketData();
+                    string[] splitContent = content.Split(':');
+                    string fileName = string.Concat(splitContent[0], "-", splitContent[1], "-chats.txt");
+                    File.WriteAllText($"{fileName}", packet.GetPacketData());
+                }
+                if(currentDataType == "contact_file")
+                {
+                    File.WriteAllText($"{packet.GetEmail()}-contacts.txt", packet.GetPacketData());
                 }
             }
             catch

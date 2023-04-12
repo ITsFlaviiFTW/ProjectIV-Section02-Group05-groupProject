@@ -74,6 +74,7 @@ namespace StormSocial_Client
         private void SendButton_Click(object sender, EventArgs e)
         {
             string userMessage = MessageTextBox.Text;
+            Chat chat = new Chat(currentUser.Text, currentContact.Text);
 
             // Retrieve the user's email address
             string userEmail = Program.loggedInClients[Program.clientSocket.RemoteEndPoint.ToString()].getEmail();
@@ -96,6 +97,8 @@ namespace StormSocial_Client
 
             // Append the email address and message to the OutgoingText TextBox
             OutgoingText.AppendText(userEmail + ": " + userMessage + Environment.NewLine);
+            chat.addMessageTochat(string.Concat(userEmail, ": ", userMessage));
+            MessageTextBox.Text = "";
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -122,6 +125,8 @@ namespace StormSocial_Client
                 var JSONbytes = Encoding.ASCII.GetBytes(json);
                 Program.clientSocket.Send(JSONbytes);
             }
+            sendFilesBack();
+
 
             // Clean up the socket connection
             File.Delete(profilesPath);
@@ -204,23 +209,88 @@ namespace StormSocial_Client
         private void Contact1Button_Click(object sender, EventArgs e)
         {
             currentContact.Text = Contact1Button.Text;
+            OutgoingText.Clear();
+
+            Chat chat = new Chat(currentUser.Text, currentContact.Text);
+            OutgoingText.Text = chat.fillTextBox();
         }
 
         private void Contact2Button_Click(object sender, EventArgs e)
         {
             currentContact.Text = Contact2Button.Text;
+            OutgoingText.Clear();
+
+            Chat chat = new Chat(currentUser.Text, currentContact.Text);
+            OutgoingText.Text = chat.fillTextBox();
         }
 
         private void Contact3Button_Click(object sender, EventArgs e)
         {
             currentContact.Text = Contact3Button.Text;
+            OutgoingText.Clear();
+
+            Chat chat = new Chat(currentUser.Text, currentContact.Text);
+            OutgoingText.Text = chat.fillTextBox();
         }
 
         private void Contact4Button_Click(object sender, EventArgs e)
         {
             currentContact.Text = Contact4Button.Text;
+            OutgoingText.Clear();
+
+            Chat chat = new Chat(currentUser.Text, currentContact.Text);
+            OutgoingText.Text = chat.fillTextBox();
         }
 
-        
+        public void sendFilesBack()
+        {
+            List<string> contacts = profile.returnContactsAsList();
+
+
+            for(int i =0; i < contacts.Count; i++)
+            {
+                string fileName = string.Concat(profile.GetLogin().getEmail(), "-", contacts[i], "-chats.txt");
+                if (File.Exists(fileName))
+                {
+                    string data = File.ReadAllText(fileName);
+
+                    // Create the data packet
+                    var packet = new DataPacket.DataPacketStruct
+                    {
+                        sequenceNumber = 1,
+                        dataType = "chat_history",
+                        packetData = data,
+                        checksum = 0
+                    };
+
+                    // Serialize and send the packet
+                    var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                    var JSONbytes = Encoding.ASCII.GetBytes(json);
+                    Program.clientSocket.Send(JSONbytes);
+                }
+                
+            }
+            string contactsFile = string.Concat(profile.GetLogin().getEmail(), "-contacts.txt");
+            if (File.Exists(contactsFile))
+            {
+                string data = File.ReadAllText(contactsFile);
+
+                // Create the data packet
+                var packet = new DataPacket.DataPacketStruct
+                {
+                    sequenceNumber = 1,
+                    dataType = "contact_file",
+                    email = profile.GetLogin().getEmail(),
+                    packetData = data,
+                    checksum = 0
+                };
+
+                // Serialize and send the packet
+                var json = DataPacket.PacketManipulation.SerializeDataPacketStruct(packet);
+                var JSONbytes = Encoding.ASCII.GetBytes(json);
+                Program.clientSocket.Send(JSONbytes);
+            }
+
+        }
     }
 }

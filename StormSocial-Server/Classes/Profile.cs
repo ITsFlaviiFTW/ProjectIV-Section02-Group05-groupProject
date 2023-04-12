@@ -1,8 +1,22 @@
-﻿using System;
+﻿using SimpleClientServer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
+using StormSocial_Server.Classes;
+using System.Net;
+using System.Net.Sockets;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace StormSocial_Server.Classes
@@ -91,6 +105,10 @@ namespace StormSocial_Server.Classes
         {
             Contacts c = new Contacts(email);
             this.setContacts(c);
+        }
+        public List<string> returnContactsAsList()
+        {
+            return this.GetContacts().getContacts();
         }
     }
 }
